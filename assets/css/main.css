@@ -327,6 +327,7 @@ p { margin: 0; }
   padding-inline: var(--gutter);
 }
 .container--narrow { max-width: calc(780px + var(--gutter) * 2); }
+.container--article { max-width: calc(760px + var(--gutter) * 2); }
 
 .section { padding-block: 64px; }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
@@ -954,7 +955,6 @@ p { margin: 0; }
 }
 
 .post-hero { padding-block: 44px 56px; }
-.post-hero-inner { max-width: 860px; }
 .post-title {
   margin-top: 18px;
   font-size: clamp(2rem, 4.6vw, 3.25rem);
@@ -980,6 +980,8 @@ p { margin: 0; }
 }
 .byline-meta > span { display: inline-flex; align-items: center; gap: 6px; }
 .byline-meta .icon { width: 15px; height: 15px; opacity: .8; }
+.byline-link { display: inline-flex; align-items: center; gap: 6px; color: var(--band-muted); text-decoration: none; }
+.byline-link:hover { color: var(--band-text); text-decoration: underline; }
 
 .avatar {
   display: grid;
@@ -998,73 +1000,8 @@ p { margin: 0; }
 .avatar img { width: 100%; height: 100%; object-fit: cover; }
 .avatar--lg { width: 72px; height: 72px; font-size: 1.375rem; }
 
-.post-layout { display: grid; gap: 32px; padding-block: 40px 24px; }
-.post-main { min-width: 0; }
-
-/* Table of contents — collapsible card on small screens, sticky rail on desktop */
-.toc {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-}
-.toc summary {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 18px;
-  color: var(--text-strong);
-  font-size: .875rem;
-  font-weight: 600;
-  list-style: none;
-  cursor: pointer;
-}
-.toc summary::-webkit-details-marker { display: none; }
-.toc summary .icon { width: 18px; height: 18px; color: var(--text-muted); }
-.toc summary .icon-chevron-down { margin-left: auto; transition: transform .2s; }
-.toc[open] summary .icon-chevron-down { transform: rotate(180deg); }
-.toc-nav { padding: 0 18px 16px; }
-.toc-nav ol { margin: 0; padding: 0; list-style: none; border-left: 1px solid var(--border); }
-.toc-nav ol ol { border-left: 0; }
-.toc-nav a {
-  display: block;
-  margin-left: -1px;
-  padding: 5px 0 5px 14px;
-  border-left: 2px solid transparent;
-  color: var(--text-muted);
-  font-size: .875rem;
-  line-height: 1.4;
-  text-decoration: none;
-  transition: color .15s, border-color .15s;
-}
-.toc-nav ol ol a { padding-left: 28px; font-size: .8125rem; }
-.toc-nav a:hover { color: var(--text-strong); }
-.toc-nav a.is-active { border-left-color: var(--accent); color: var(--accent-text); font-weight: 600; }
-
-@media (min-width: 1100px) {
-  .post-layout {
-    grid-template-columns: minmax(0, 760px) 232px;
-    justify-content: center;
-    gap: 72px;
-    padding-top: 56px;
-  }
-  .post-layout--no-toc { grid-template-columns: minmax(0, 760px); }
-  .post-main { grid-column: 1; grid-row: 1; }
-  .post-toc { grid-column: 2; grid-row: 1; }
-  .post-toc .toc {
-    position: sticky;
-    top: calc(var(--header-h) + 32px);
-    max-height: calc(100vh - var(--header-h) - 64px);
-    overflow-y: auto;
-    border: 0;
-    background: none;
-  }
-  .toc summary { padding: 0 0 12px; color: var(--text-muted); font-family: var(--font-mono); font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; pointer-events: none; }
-  .toc summary .icon-chevron-down { display: none; }
-  .toc-nav { padding: 0; }
-}
-@media (max-width: 1099px) {
-  .post-layout { max-width: calc(760px + var(--gutter) * 2); }
-}
+.post-layout { padding-block: 48px 24px; }
+@media (min-width: 1100px) { .post-layout { padding-top: 56px; } }
 
 .post-footer {
   display: grid;
@@ -1106,44 +1043,15 @@ p { margin: 0; }
 .author-card-bio { margin: 10px 0 14px; font-size: .9375rem; }
 @media (max-width: 480px) { .author-card { flex-direction: column; } }
 
-.post-nav {
-  display: grid;
-  gap: 16px;
-  padding-block: 8px 64px;
+.comments {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: calc(var(--header-h) + 16px);
 }
-@media (min-width: 720px) {
-  .post-nav { grid-template-columns: 1fr 1fr; max-width: calc(1064px + var(--gutter) * 2); }
-  .post-nav-link--next { grid-column: 2; }
-}
-.post-nav-link {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 20px 24px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--text);
-  text-decoration: none;
-  transition: border-color .15s, transform .2s var(--ease);
-}
-.post-nav-link:hover { border-color: var(--accent-2); color: var(--text); transform: translateY(-2px); }
-.post-nav-link--next { text-align: right; align-items: flex-end; }
-.post-nav-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: .72rem;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.post-nav-label .icon { width: 14px; height: 14px; }
-.post-nav-link strong { color: var(--text-strong); font-family: var(--font-display); font-size: 1.0625rem; line-height: 1.35; }
-
-.comments { padding-block: 24px 80px; }
-.comments .section-title { margin-bottom: 24px; font-size: 1.5rem; }
+.comments-title { font-size: 1.5rem; letter-spacing: -.02em; }
+.comments-note { margin: 6px 0 24px; color: var(--text-muted); font-size: .9375rem; }
+.giscus, .giscus-frame { width: 100%; }
 
 /* 10. Prose ---------------------------------------------------------------- */
 .prose {
@@ -1635,7 +1543,7 @@ mark { padding: 0 .1em; border-radius: 3px; background: var(--mark-bg); color: i
 }
 
 @media print {
-  .site-header, .site-footer, .post-toc, .reading-progress, .post-nav, .related,
+  .site-header, .site-footer, .reading-progress, .related,
   .comments, .share, .code-toolbar, .diagram-hint, .skip-link { display: none !important; }
   body { background: #fff; color: #000; }
   .band { background: none; color: #000; border: 0; }

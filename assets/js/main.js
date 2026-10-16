@@ -163,56 +163,9 @@
     block.insertBefore(bar, block.firstChild);
   });
 
-  /* ---------- Table of contents + heading anchors ----------------------- */
-  var tocNav = document.getElementById('toc');
-  var tocLinks = [];
-
+  /* ---------- Heading anchors ------------------------------------------ */
   if (postBody) {
-    var headings = Array.prototype.slice.call(postBody.querySelectorAll('h2[id], h3[id]'));
-
-    if (tocNav) {
-      if (headings.length < 2) {
-        var aside = document.querySelector('.post-toc');
-        if (aside) aside.parentNode.removeChild(aside);
-        var layout = document.querySelector('.post-layout');
-        if (layout) layout.classList.add('post-layout--no-toc');
-      } else {
-        var list = document.createElement('ol');
-        var lastTop = null;
-        var sub = null;
-        headings.forEach(function (h) {
-          var li = document.createElement('li');
-          var a = document.createElement('a');
-          a.href = '#' + h.id;
-          a.textContent = h.textContent;
-          li.appendChild(a);
-          if (h.tagName === 'H3' && lastTop) {
-            if (!sub) { sub = document.createElement('ol'); lastTop.appendChild(sub); }
-            sub.appendChild(li);
-          } else {
-            list.appendChild(li);
-            lastTop = li;
-            sub = null;
-          }
-          tocLinks.push({ link: a, heading: h });
-        });
-        tocNav.appendChild(list);
-
-        // Open as a rail on desktop, collapsed card on small screens.
-        var details = tocNav.closest('details');
-        if (details) {
-          var wide = window.matchMedia('(min-width: 1100px)');
-          var syncDetails = function () { details.open = wide.matches; };
-          syncDetails();
-          wide.addEventListener('change', syncDetails);
-          tocNav.addEventListener('click', function (e) {
-            if (e.target.closest('a') && !wide.matches) details.open = false;
-          });
-        }
-      }
-    }
-
-    headings.forEach(function (h) {
+    postBody.querySelectorAll('h2[id], h3[id]').forEach(function (h) {
       var anchor = document.createElement('a');
       anchor.className = 'heading-anchor';
       anchor.href = '#' + h.id;
@@ -222,42 +175,46 @@
     });
   }
 
-  /* ---------- Scroll: reading progress + active TOC entry --------------- */
+  /* ---------- Reading progress bar -------------------------------------- */
   var progressBar = document.querySelector('.reading-progress span');
-  if (postBody && (progressBar || tocLinks.length)) {
+  if (postBody && progressBar) {
     var ticking = false;
-    var activeLink = null;
-
     var onScroll = function () {
       ticking = false;
       var viewportH = window.innerHeight;
-
-      if (progressBar) {
-        var rect = postBody.getBoundingClientRect();
-        var total = rect.height - viewportH * 0.6;
-        var progress = total > 0 ? (viewportH * 0.4 - rect.top) / total : 1;
-        progressBar.style.transform = 'scaleX(' + Math.min(1, Math.max(0, progress)) + ')';
-      }
-
-      if (tocLinks.length) {
-        var current = null;
-        for (var i = 0; i < tocLinks.length; i++) {
-          if (tocLinks[i].heading.getBoundingClientRect().top <= 140) current = tocLinks[i].link;
-          else break;
-        }
-        if (current !== activeLink) {
-          if (activeLink) activeLink.classList.remove('is-active');
-          if (current) current.classList.add('is-active');
-          activeLink = current;
-        }
-      }
+      var rect = postBody.getBoundingClientRect();
+      var total = rect.height - viewportH * 0.6;
+      var progress = total > 0 ? (viewportH * 0.4 - rect.top) / total : 1;
+      progressBar.style.transform = 'scaleX(' + Math.min(1, Math.max(0, progress)) + ')';
     };
-
     window.addEventListener('scroll', function () {
       if (!ticking) { ticking = true; window.requestAnimationFrame(onScroll); }
     }, { passive: true });
     window.addEventListener('resize', onScroll);
     onScroll();
+  }
+
+  /* ---------- Article view count (GoatCounter) -------------------------- */
+  // GoatCounter's count.js records the visit; this reads the page's total from
+  // its public counter API. Totals are cached by GoatCounter for up to 4 hours.
+  // Pages with no recorded views yet return 404, and the counter stays hidden.
+  var viewCount = document.querySelector('[data-view-count]');
+  if (viewCount && window.fetch) {
+    var counterUrl = viewCount.getAttribute('data-view-count') + '/counter/' +
+      encodeURIComponent(window.location.pathname) + '.json';
+    fetch(counterUrl)
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var count = String(data && data.count != null ? data.count : '').trim();
+        if (!count) return;
+        viewCount.querySelector('[data-view-count-value]').textContent =
+          count + (count === '1' ? ' view' : ' views');
+        viewCount.hidden = false;
+      })
+      .catch(function () { /* no views recorded yet, or counter not enabled */ });
   }
 
   /* ---------- Lightbox for diagrams and images -------------------------- */

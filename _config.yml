@@ -43,7 +43,6 @@ defaults:
     values:
       layout: post
       author: subhasis
-      toc: true
       share: true
       comments: true
 
@@ -70,15 +69,23 @@ feed:
   path: feed.xml
 
 # =============================================================================
-#  Optional: comments via giscus (GitHub Discussions). See README.md.
+#  Article comments via giscus (stored as GitHub Discussions in this repo).
+#  Comments appear once category_id is filled in — see README.md, section 7.
 # =============================================================================
 giscus:
-  enabled: false
+  enabled: true
   repo: subhtech09/techblogging
-  repo_id: ""
+  repo_id: "R_kgDOVCXoUw"
   category: Announcements
-  category_id: ""
+  category_id: ""             # from https://giscus.app after enabling Discussions
   mapping: pathname
+
+# =============================================================================
+#  Article view counts via GoatCounter (free, no cookies). The view counter
+#  appears once code is filled in — see README.md, section 7.
+# =============================================================================
+goatcounter:
+  code: ""                    # e.g. "architects-handbook" for https://architects-handbook.goatcounter.com
 
 # =============================================================================
 #  Build

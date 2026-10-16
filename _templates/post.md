@@ -10,7 +10,6 @@ tags: [tag-one, tag-two]
 # image: /assets/images/posts/__SLUG__/cover.jpg   # optional: card thumbnail + social preview
 # featured: true                                   # optional: pin to "Start here" on the home page
 # last_modified_at: __DATE__                       # optional: shows "Updated <date>"
-# toc: false                                       # optional: hide the table of contents
 ---
 
 Opening paragraph — what problem this article solves and who it is for. The
@@ -18,8 +17,7 @@ first paragraph is styled slightly larger as a lead-in.
 
 ## First section
 
-Body text. Use `##` for sections and `###` for sub-sections — they build the
-"On this page" table of contents automatically.
+Body text. Use `##` for sections and `###` for sub-sections.
 
 {% include figure.html src="architecture.jpg" alt="Describe what the diagram shows" caption="**Figure 1.** A short caption explaining the diagram." %}
 

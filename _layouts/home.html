@@ -11,7 +11,6 @@ layout: default
       <p class="hero-lede">{{ home_hero.lede | default: site.description }}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="{{ '/blog/' | relative_url }}">Read the articles {% include icon.html name="arrow-right" %}</a>
-        <a class="btn btn-secondary" href="{{ '/topics/' | relative_url }}">Browse topics</a>
       </div>
       {%- assign home_latest = site.posts.first -%}
       {%- if home_latest %}
@@ -69,7 +68,6 @@ layout: default
         <p class="eyebrow">Topics</p>
         <h2 class="section-title">Three pillars of the modern data &amp; AI stack</h2>
       </div>
-      <a class="link-arrow" href="{{ '/topics/' | relative_url }}">All topics {% include icon.html name="arrow-right" %}</a>
     </div>
     <div class="topic-grid">
       {%- for home_topic in site.data.topics %}

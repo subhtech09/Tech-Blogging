@@ -7,96 +7,83 @@ layout: default
 {%- assign post_words = content | strip_html | number_of_words -%}
 {%- assign post_minutes = post_words | times: 1.0 | divided_by: site.words_per_minute | ceil | at_least: 1 -%}
 {%- assign post_topic_url = '/topics/' | append: post_topic_key | append: '/' | relative_url -%}
+{%- comment -%} Comments show once giscus is configured in _config.yml (see README). {%- endcomment -%}
+{%- assign post_comments_on = false -%}
+{%- if site.giscus.enabled and page.comments != false -%}
+  {%- if site.giscus.repo_id and site.giscus.repo_id != "" and site.giscus.category_id and site.giscus.category_id != "" -%}
+    {%- assign post_comments_on = true -%}
+  {%- endif -%}
+{%- endif -%}
 <div class="reading-progress" aria-hidden="true"><span></span></div>
 
 <article class="post">
   <header class="post-hero band">
-    <div class="container">
-      <div class="post-hero-inner">
-        <nav class="breadcrumbs" aria-label="Breadcrumb">
-          <a href="{{ '/' | relative_url }}">Home</a>
-          <span aria-hidden="true">/</span>
-          <a href="{{ '/blog/' | relative_url }}">Articles</a>
-          {%- if post_topic %}
-          <span aria-hidden="true">/</span>
-          <a href="{{ post_topic_url }}">{{ post_topic.name }}</a>
-          {%- endif %}
-        </nav>
-
+    <div class="container container--article">
+      <nav class="breadcrumbs" aria-label="Breadcrumb">
+        <a href="{{ '/' | relative_url }}">Home</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ '/blog/' | relative_url }}">Articles</a>
         {%- if post_topic %}
-        <a class="chip chip--lg tone-{{ post_topic.tone | default: 'green' }}" href="{{ post_topic_url }}">{% include icon.html name=post_topic.icon %}{{ post_topic.name }}</a>
+        <span aria-hidden="true">/</span>
+        <a href="{{ post_topic_url }}">{{ post_topic.name }}</a>
         {%- endif %}
+      </nav>
 
-        <h1 class="post-title">{{ page.title | escape }}</h1>
-        {%- if page.description %}
-        <p class="post-lede">{{ page.description | escape }}</p>
-        {%- endif %}
+      {%- if post_topic %}
+      <a class="chip chip--lg tone-{{ post_topic.tone | default: 'green' }}" href="{{ post_topic_url }}">{% include icon.html name=post_topic.icon %}{{ post_topic.name }}</a>
+      {%- endif %}
 
-        <div class="post-byline">
-          {%- if post_author %}{% include avatar.html author=post_author %}{% endif %}
-          <div>
-            {%- if post_author %}<span class="byline-name">{{ post_author.name }}</span>{% endif %}
-            <span class="byline-meta">
-              <span>{% include icon.html name="calendar" %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></span>
-              {%- if page.last_modified_at %}
-              <span>Updated <time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%B %-d, %Y" }}</time></span>
-              {%- endif %}
-              <span>{% include icon.html name="clock" %}{{ post_minutes }} min read</span>
-            </span>
-          </div>
+      <h1 class="post-title">{{ page.title | escape }}</h1>
+      {%- if page.description %}
+      <p class="post-lede">{{ page.description | escape }}</p>
+      {%- endif %}
+
+      <div class="post-byline">
+        {%- if post_author %}{% include avatar.html author=post_author %}{% endif %}
+        <div>
+          {%- if post_author %}<span class="byline-name">{{ post_author.name }}</span>{% endif %}
+          <span class="byline-meta">
+            <span>{% include icon.html name="calendar" %}<time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></span>
+            {%- if page.last_modified_at %}
+            <span>Updated <time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%B %-d, %Y" }}</time></span>
+            {%- endif %}
+            <span>{% include icon.html name="clock" %}{{ post_minutes }} min read</span>
+            {%- if site.goatcounter.code and site.goatcounter.code != "" %}
+            <span class="view-count" data-view-count="https://{{ site.goatcounter.code }}.goatcounter.com" hidden>{% include icon.html name="eye" %}<span data-view-count-value></span></span>
+            {%- endif %}
+            {%- if post_comments_on %}
+            <a class="byline-link" href="#comments">{% include icon.html name="comment" %}Comments</a>
+            {%- endif %}
+          </span>
         </div>
       </div>
     </div>
   </header>
 
-  <div class="container post-layout{% if page.toc == false %} post-layout--no-toc{% endif %}">
-    {%- if page.toc != false %}
-    <aside class="post-toc" aria-label="Table of contents">
-      <details class="toc" open>
-        <summary>{% include icon.html name="list" %}<span>On this page</span>{% include icon.html name="chevron-down" %}</summary>
-        <nav id="toc" class="toc-nav"></nav>
-      </details>
-    </aside>
-    {%- endif %}
-
-    <div class="post-main">
-      <div class="prose" id="post-content">
-        {{ content }}
-      </div>
-
-      <footer class="post-footer">
-        {%- if page.tags.size > 0 %}
-        <div class="post-tags" aria-label="Tags">
-          {%- for tag in page.tags %}
-          <a class="tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
-          {%- endfor %}
-        </div>
-        {%- endif %}
-        {%- if page.share != false %}
-        {% include share.html %}
-        {%- endif %}
-        {% include author-card.html author=post_author %}
-      </footer>
+  <div class="container container--article post-layout">
+    <div class="prose" id="post-content">
+      {{ content }}
     </div>
+
+    <footer class="post-footer">
+      {%- if page.tags.size > 0 %}
+      <div class="post-tags" aria-label="Tags">
+        {%- for tag in page.tags %}
+        <a class="tag" href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">#{{ tag }}</a>
+        {%- endfor %}
+      </div>
+      {%- endif %}
+      {%- if page.share != false %}
+      {% include share.html %}
+      {%- endif %}
+      {% include author-card.html author=post_author %}
+    </footer>
+
+    {%- if post_comments_on %}
+    {% include comments.html %}
+    {%- endif %}
   </div>
 </article>
-
-{%- if page.previous or page.next %}
-<nav class="container post-nav" aria-label="Previous and next articles">
-  {%- if page.previous %}
-  <a class="post-nav-link post-nav-link--prev" href="{{ page.previous.url | relative_url }}">
-    <span class="post-nav-label">{% include icon.html name="arrow-left" %} Previous</span>
-    <strong>{{ page.previous.title | escape }}</strong>
-  </a>
-  {%- endif %}
-  {%- if page.next %}
-  <a class="post-nav-link post-nav-link--next" href="{{ page.next.url | relative_url }}">
-    <span class="post-nav-label">Next {% include icon.html name="arrow-right" %}</span>
-    <strong>{{ page.next.title | escape }}</strong>
-  </a>
-  {%- endif %}
-</nav>
-{%- endif %}
 
 {%- assign post_related = site.posts | where_exp: "p", "p.categories contains post_topic_key" | where_exp: "p", "p.url != page.url" -%}
 {%- if post_related.size > 0 %}
@@ -114,5 +101,3 @@ layout: default
   </div>
 </section>
 {%- endif %}
-
-{% include comments.html %}

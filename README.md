@@ -8,7 +8,8 @@ Live URL (once Pages is enabled): **https://subhtech09.github.io/techblogging/**
 - Light mint-green and sky-blue palette with automatic light and dark mode
 - Articles are Markdown files; architecture diagrams are plain `.jpg` files
 - Click-to-enlarge diagram viewer (fit to screen, actual size, drag to pan)
-- Auto-generated table of contents, reading progress bar, code copy buttons
+- Reading progress bar, code copy buttons, heading links
+- Comments on every article (giscus) and per-article view counts (GoatCounter)
 - Topic pages, tags, client-side full-text search, RSS feed, sitemap, SEO and social cards
 - No build step on your side — GitHub builds the site on every push
 
@@ -61,7 +62,6 @@ tags: [lakehouse, medallion]
 image: /assets/images/posts/your-slug/main-diagram.jpg   # optional: card thumbnail + social preview
 featured: true                     # optional: show in "Start here" on the home page
 last_modified_at: 2026-11-01       # optional: shows "Updated …"
-toc: false                         # optional: hide the table of contents
 ---
 ```
 
@@ -101,7 +101,7 @@ Readers can click any diagram to open it full-screen, switch to actual size and 
 
 | You write | You get |
 |---|---|
-| `## Heading` / `### Sub-heading` | Section headings and table-of-contents entries |
+| `## Heading` / `### Sub-heading` | Section headings (each gets a shareable `#` link) |
 | ```` ```sql ```` … ```` ``` ```` | Syntax-highlighted code with a copy button (`python`, `sql`, `yaml`, `bash`, `scala`, `json`, …) |
 | `> Text` then `{: .note }` on the next line | Grey "Note" callout |
 | `> Text` then `{: .tip }` | Green "Tip" callout |
@@ -156,25 +156,70 @@ podman run --rm -it -p 4000:4000 -v "${PWD}:/srv" -w /srv ruby:3.3 bash -c "bund
 `topics/`, change `topic:`, `title:` and `permalink:`, and add it to
 `_data/navigation.yml` if it should appear in the header.
 
-### Comments (optional)
+---
 
-Comments use [giscus](https://giscus.app), which stores them in GitHub Discussions:
+## 7. Turn on comments and view counts (one-time setup)
 
-1. In the repo settings enable **Discussions**.
-2. Install the giscus app: <https://github.com/apps/giscus>.
-3. Fill in the form at <https://giscus.app> to get `repo_id` and `category_id`.
-4. Copy them into the `giscus:` block in `_config.yml` and set `enabled: true`.
+GitHub Pages can only serve files, so comments and view counts use two free
+services. Until each one is configured, its feature simply stays hidden on the
+article pages.
+
+### Comments — giscus
+
+[giscus](https://giscus.app) stores each article's comments as a GitHub
+Discussion in this repository — no database, no ads. Readers sign in with
+GitHub to comment, and you moderate from the repo's **Discussions** tab.
+
+1. On GitHub open the repo → **Settings → General → Features** and tick **Discussions**.
+2. Install the giscus app on this repo: <https://github.com/apps/giscus> →
+   **Install** → *Only select repositories* → `techblogging`.
+3. Open <https://giscus.app>, type `subhtech09/techblogging` in the *Repository*
+   box, choose **Announcements** as the *Discussion category*, and copy the
+   `data-category-id` value from the generated snippet.
+4. Paste it into `_config.yml`:
+
+   ```yaml
+   giscus:
+     category_id: "DIC_kwDO…"   # the value you copied
+   ```
+
+   (`repo_id` is already filled in.) Commit and push — comments appear at the
+   bottom of every article. To turn them off for one article, add
+   `comments: false` to its front matter.
+
+### View counts — GoatCounter
+
+[GoatCounter](https://www.goatcounter.com) is a free, open-source, cookie-free
+analytics service. It records each visit and lets the article page show its
+total views (and gives you a stats dashboard).
+
+1. Sign up at <https://www.goatcounter.com/signup>. The **code** you choose
+   becomes your dashboard address, e.g. `architects-handbook` →
+   `https://architects-handbook.goatcounter.com`.
+2. In the dashboard open **Settings**, tick
+   **"Allow adding visitor counts on your website"** and save.
+3. Put the code in `_config.yml`, then commit and push:
+
+   ```yaml
+   goatcounter:
+     code: "architects-handbook"
+   ```
+
+Notes: visits from `localhost` are not counted; GoatCounter caches the totals
+for up to 4 hours, so new views appear with a delay; and an article shows its
+count only after its first recorded visit. Counts are tied to the page URL, so
+renaming a post's file (or moving to a custom domain) starts its count afresh.
 
 ---
 
-## 7. How this fits GitHub Pages' limits
+## 8. How this fits GitHub Pages' limits
 
 | GitHub Pages limitation | How the site handles it |
 |---|---|
 | Static files only, no server code | Everything is pre-rendered HTML; search, filters and the diagram viewer run in the browser |
 | Only [whitelisted plugins](https://pages.github.com/versions/) | Uses only `jekyll-feed`, `jekyll-seo-tag` and `jekyll-sitemap`; topic and tag pages use plain Liquid |
 | No database | Search reads `search.json`, which is generated at build time |
-| No comment backend | Optional giscus comments stored in GitHub Discussions |
+| No comment backend or database for counters | Comments via giscus (GitHub Discussions); view counts via GoatCounter |
 | 1 GB site size, 100 GB/month soft bandwidth | Plain CSS/JS with no frameworks; keep diagrams under ~500 KB |
 | Pages cached for ~10 minutes | CSS/JS URLs carry a build timestamp, so readers get new styles after each deploy |
 
