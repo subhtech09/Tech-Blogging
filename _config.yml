@@ -12,12 +12,12 @@ timezone: UTC               # set to your local zone, e.g. Asia/Kolkata
 
 # -----------------------------------------------------------------------------
 #  GitHub Pages address
-#  Repo "techblogging" is a *project site*  ->  https://subhtech09.github.io/techblogging
+#  Repo "Tech-Blogging" is a *project site*  ->  https://subhtech09.github.io/Tech-Blogging
 #  If you rename the repo to "subhtech09.github.io" (a *user site*), or use a
 #  custom domain, set  baseurl: ""  and update url accordingly.
 # -----------------------------------------------------------------------------
 url: "https://subhtech09.github.io"
-baseurl: "/techblogging"
+baseurl: "/Tech-Blogging"   # case-sensitive: must match the repo name exactly
 
 # Default social-preview image (used when a post has no `image:`)
 og_default_image: /assets/images/og-default.jpg
@@ -74,8 +74,8 @@ feed:
 # =============================================================================
 giscus:
   enabled: true
-  repo: subhtech09/techblogging
-  repo_id: "R_kgDOVCXoUw"
+  repo: subhtech09/Tech-Blogging
+  repo_id: ""                 # from https://giscus.app (the old ID belonged to the deleted repo)
   category: Announcements
   category_id: ""             # from https://giscus.app after enabling Discussions
   mapping: pathname

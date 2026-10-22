@@ -3,7 +3,7 @@
 A static tech blog about **data architecture, data engineering and AI engineering**,
 built with [Jekyll](https://jekyllrb.com/) and hosted on **GitHub Pages**.
 
-Live URL (once Pages is enabled): **https://subhtech09.github.io/techblogging/**
+Live URL (once Pages is enabled): **https://subhtech09.github.io/Tech-Blogging/**
 
 - Light mint-green and sky-blue palette with automatic light and dark mode
 - Articles are Markdown files; architecture diagrams are plain `.jpg` files
@@ -17,7 +17,7 @@ Live URL (once Pages is enabled): **https://subhtech09.github.io/techblogging/**
 
 ## 1. Publish the site (one-time setup)
 
-1. Push this folder to `https://github.com/subhtech09/techblogging` (branch `main`).
+1. Push this folder to `https://github.com/subhtech09/Tech-Blogging` (branch `main`).
 2. On GitHub open **Settings → Pages**.
 3. Under **Build and deployment**, choose **Source: Deploy from a branch**,
    then **Branch: `main`** and folder **`/ (root)`**, and click **Save**.
@@ -126,7 +126,7 @@ machine first:
    bundle exec jekyll serve --livereload
    ```
 
-3. Open <http://localhost:4000/techblogging/>.
+3. Open <http://localhost:4000/Tech-Blogging/>.
 
 `bundle install` uses the `github-pages` gem, so the local build uses the same
 Jekyll and plugin versions as GitHub.
@@ -172,20 +172,20 @@ GitHub to comment, and you moderate from the repo's **Discussions** tab.
 
 1. On GitHub open the repo → **Settings → General → Features** and tick **Discussions**.
 2. Install the giscus app on this repo: <https://github.com/apps/giscus> →
-   **Install** → *Only select repositories* → `techblogging`.
-3. Open <https://giscus.app>, type `subhtech09/techblogging` in the *Repository*
+   **Install** → *Only select repositories* → `Tech-Blogging`.
+3. Open <https://giscus.app>, type `subhtech09/Tech-Blogging` in the *Repository*
    box, choose **Announcements** as the *Discussion category*, and copy the
-   `data-category-id` value from the generated snippet.
-4. Paste it into `_config.yml`:
+   `data-repo-id` and `data-category-id` values from the generated snippet.
+4. Paste them into `_config.yml`:
 
    ```yaml
    giscus:
-     category_id: "DIC_kwDO…"   # the value you copied
+     repo_id: "R_kgDO…"         # the values you copied
+     category_id: "DIC_kwDO…"
    ```
 
-   (`repo_id` is already filled in.) Commit and push — comments appear at the
-   bottom of every article. To turn them off for one article, add
-   `comments: false` to its front matter.
+   Commit and push — comments appear at the bottom of every article. To turn
+   them off for one article, add `comments: false` to its front matter.
 
 ### View counts — GoatCounter
 

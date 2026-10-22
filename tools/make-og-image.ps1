@@ -5,12 +5,12 @@
   Run it again whenever you change the site title or tagline.
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File tools\make-og-image.ps1 -Title "The Architect's Handbook" -Url "subhtech09.github.io/techblogging"
+  powershell -ExecutionPolicy Bypass -File tools\make-og-image.ps1 -Title "The Architect's Handbook" -Url "subhtech09.github.io/Tech-Blogging"
 #>
 param(
   [string]$Title   = 'The Architect''s Handbook',
   [string]$Tagline = ('Data architecture  {0}  Data engineering  {0}  AI engineering' -f [char]0x00B7),
-  [string]$Url     = 'subhtech09.github.io/techblogging'
+  [string]$Url     = 'subhtech09.github.io/Tech-Blogging'
 )
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
