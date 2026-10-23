@@ -11,13 +11,11 @@ lang: en
 timezone: UTC               # set to your local zone, e.g. Asia/Kolkata
 
 # -----------------------------------------------------------------------------
-#  GitHub Pages address
-#  Repo "Tech-Blogging" is a *project site*  ->  https://subhtech09.github.io/Tech-Blogging
-#  If you rename the repo to "subhtech09.github.io" (a *user site*), or use a
-#  custom domain, set  baseurl: ""  and update url accordingly.
+#  Site address — hosted on Azure Static Web Apps, served from the domain root.
+#  If you add a custom domain, update url (keep baseurl: "").
 # -----------------------------------------------------------------------------
-url: "https://subhtech09.github.io"
-baseurl: "/Tech-Blogging"   # case-sensitive: must match the repo name exactly
+url: "https://purple-cliff-09b300910.5.azurestaticapps.net"
+baseurl: ""                 # Azure Static Web Apps serves the site from the domain root
 
 # Default social-preview image (used when a post has no `image:`)
 og_default_image: /assets/images/og-default.jpg
@@ -69,23 +67,22 @@ feed:
   path: feed.xml
 
 # =============================================================================
-#  Article comments via giscus (stored as GitHub Discussions in this repo).
-#  Comments appear once category_id is filled in — see README.md, section 7.
+#  Article comments, stored in Azure Cosmos DB through the site's own /api
+#  functions (needs Azure Static Web Apps hosting — see README.md, section 7).
+#  Readers don't sign in; Cloudflare Turnstile and a moderation queue at
+#  /moderate/ keep spam out. Comments appear once turnstile_site_key is set.
 # =============================================================================
-giscus:
+comments:
   enabled: true
-  repo: subhtech09/Tech-Blogging
-  repo_id: ""                 # from https://giscus.app (the old ID belonged to the deleted repo)
-  category: Announcements
-  category_id: ""             # from https://giscus.app after enabling Discussions
-  mapping: pathname
+  api: /api                   # served from the domain root by Static Web Apps
+  turnstile_site_key: "0x4AAAAAAFirEz5RjelBPL-O"   # Cloudflare Turnstile site key (public)
 
 # =============================================================================
 #  Article view counts via GoatCounter (free, no cookies). The view counter
 #  appears once code is filled in — see README.md, section 7.
 # =============================================================================
 goatcounter:
-  code: ""                    # e.g. "architects-handbook" for https://architects-handbook.goatcounter.com
+  code: "tech-blogging"       # dashboard: https://tech-blogging.goatcounter.com
 
 # =============================================================================
 #  Build
@@ -98,6 +95,7 @@ exclude:
   - Gemfile.lock
   - vendor
   - node_modules
+  - api                       # Azure Functions, deployed separately by Static Web Apps
   - tools
   - .jekyll-cache
   - .sass-cache

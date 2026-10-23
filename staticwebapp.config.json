@@ -1,0 +1,18 @@
+{
+  "routes": [
+    { "route": "/moderate*", "allowedRoles": ["admin"] },
+    { "route": "/api/manage/*", "allowedRoles": ["admin"] }
+  ],
+  "responseOverrides": {
+    "401": {
+      "redirect": "/.auth/login/github?post_login_redirect_uri=/moderate/",
+      "statusCode": 302
+    },
+    "404": {
+      "rewrite": "/404.html"
+    }
+  },
+  "platform": {
+    "apiRuntime": "node:22"
+  }
+}

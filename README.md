@@ -1,34 +1,32 @@
 # The Architect's Handbook
 
 A static tech blog about **data architecture, data engineering and AI engineering**,
-built with [Jekyll](https://jekyllrb.com/) and hosted on **GitHub Pages**.
+built with [Jekyll](https://jekyllrb.com/) and hosted on **Azure Static Web Apps**.
 
-Live URL (once Pages is enabled): **https://subhtech09.github.io/Tech-Blogging/**
+Live URL: **https://purple-cliff-09b300910.5.azurestaticapps.net/**
 
 - Light mint-green and sky-blue palette with automatic light and dark mode
 - Articles are Markdown files; architecture diagrams are plain `.jpg` files
 - Click-to-enlarge diagram viewer (fit to screen, actual size, drag to pan)
 - Reading progress bar, code copy buttons, heading links
-- Comments on every article (giscus) and per-article view counts (GoatCounter)
+- Comments on every article (Azure Cosmos DB, moderated) and per-article view counts (GoatCounter)
 - Topic pages, tags, client-side full-text search, RSS feed, sitemap, SEO and social cards
-- No build step on your side — GitHub builds the site on every push
+- No build step on your side — GitHub Actions builds and deploys the site on every push
 
 ---
 
-## 1. Publish the site (one-time setup)
+## 1. Publish the site
 
-1. Push this folder to `https://github.com/subhtech09/Tech-Blogging` (branch `main`).
-2. On GitHub open **Settings → Pages**.
-3. Under **Build and deployment**, choose **Source: Deploy from a branch**,
-   then **Branch: `main`** and folder **`/ (root)`**, and click **Save**.
-4. Wait 1–2 minutes. The **Actions** tab shows the "pages build and deployment"
-   run; when it is green the site is live.
+The site is hosted on **Azure Static Web Apps** (Free plan), connected to
+`https://github.com/subhtech09/Tech-Blogging` (branch `main`).
 
-From then on, every `git push` to `main` rebuilds and republishes the site.
+Every `git push` to `main` runs the workflow in `.github/workflows/`: it builds
+the site with Jekyll (Ruby 3.3), then deploys `_site` and the comments API in
+`api/` to Azure. The **Actions** tab shows each run; when it is green the
+site is live.
 
-> **Different URL?** `_config.yml` contains `url` and `baseurl`. If you rename the
-> repository to `subhtech09.github.io` or add a custom domain, set `baseurl: ""`
-> and update `url`.
+> **Custom domain?** Add it in the Static Web App (**Custom domains**), then set
+> `url` in `_config.yml` to the new address. Keep `baseurl: ""`.
 
 ---
 
@@ -126,7 +124,7 @@ machine first:
    bundle exec jekyll serve --livereload
    ```
 
-3. Open <http://localhost:4000/Tech-Blogging/>.
+3. Open <http://localhost:4000/>.
 
 `bundle install` uses the `github-pages` gem, so the local build uses the same
 Jekyll and plugin versions as GitHub.
@@ -160,32 +158,48 @@ podman run --rm -it -p 4000:4000 -v "${PWD}:/srv" -w /srv ruby:3.3 bash -c "bund
 
 ## 7. Turn on comments and view counts (one-time setup)
 
-GitHub Pages can only serve files, so comments and view counts use two free
-services. Until each one is configured, its feature simply stays hidden on the
-article pages.
+Until each feature is configured, it simply stays hidden on the article pages.
 
-### Comments — giscus
+### Comments — Azure Cosmos DB
 
-[giscus](https://giscus.app) stores each article's comments as a GitHub
-Discussion in this repository — no database, no ads. Readers sign in with
-GitHub to comment, and you moderate from the repo's **Discussions** tab.
+Comments are stored in **Azure Cosmos DB** and served by the small API in
+`api/` (Azure Functions). That API only runs when the site is hosted on
+**Azure Static Web Apps** (on a plain static host the comment section can't load).
 
-1. On GitHub open the repo → **Settings → General → Features** and tick **Discussions**.
-2. Install the giscus app on this repo: <https://github.com/apps/giscus> →
-   **Install** → *Only select repositories* → `Tech-Blogging`.
-3. Open <https://giscus.app>, type `subhtech09/Tech-Blogging` in the *Repository*
-   box, choose **Announcements** as the *Discussion category*, and copy the
-   `data-repo-id` and `data-category-id` values from the generated snippet.
-4. Paste them into `_config.yml`:
+- **Readers don't sign in.** They give a name, an optional email (never shown)
+  and the comment. **Cloudflare Turnstile**, a hidden honeypot field and a rate
+  limit (3 comments per visitor per 10 minutes) keep bots out.
+- **Moderation:** new comments wait as `pending` until you approve them at
+  **`/moderate/`**. Only users with the Static Web Apps role `admin` can open
+  that page or call `/api/manage/*`.
+- **Keyed by slug:** each comment stores the post's slug (from its file name),
+  so renaming the domain keeps comments attached. To keep comments when you
+  rename a post file, set `comments_id: <old-slug>` in its front matter.
+- **Privacy:** only a salted hash of the commenter's IP is stored (for rate
+  limiting). All comment text is shown as plain text, never as HTML.
 
-   ```yaml
-   giscus:
-     repo_id: "R_kgDO…"         # the values you copied
-     category_id: "DIC_kwDO…"
-   ```
+Site setting (`_config.yml`):
 
-   Commit and push — comments appear at the bottom of every article. To turn
-   them off for one article, add `comments: false` to its front matter.
+```yaml
+comments:
+  enabled: true
+  api: /api
+  turnstile_site_key: "0x4AAAA…"   # comments appear once this is set
+```
+
+API settings (Static Web Apps → **Environment variables**; for local runs,
+copy `api/local.settings.example.json` to `api/local.settings.json`):
+
+| Setting | Value |
+|---|---|
+| `COSMOS_CONNECTION_STRING` | Cosmos DB account connection string |
+| `COSMOS_DATABASE` | Database name (default `blog`) |
+| `COSMOS_CONTAINER` | Container name (default `comments`, partition key **`/slug`**) |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key |
+| `IP_HASH_SALT` | Any long random string |
+| `COMMENTS_AUTO_APPROVE` | `true` to publish without review (default `false`) |
+
+To turn comments off for one article, add `comments: false` to its front matter.
 
 ### View counts — GoatCounter
 
@@ -219,7 +233,7 @@ renaming a post's file (or moving to a custom domain) starts its count afresh.
 | Static files only, no server code | Everything is pre-rendered HTML; search, filters and the diagram viewer run in the browser |
 | Only [whitelisted plugins](https://pages.github.com/versions/) | Uses only `jekyll-feed`, `jekyll-seo-tag` and `jekyll-sitemap`; topic and tag pages use plain Liquid |
 | No database | Search reads `search.json`, which is generated at build time |
-| No comment backend or database for counters | Comments via giscus (GitHub Discussions); view counts via GoatCounter |
+| No comment backend or database for counters | View counts via GoatCounter; comments need the Azure Static Web Apps API (section 7) |
 | 1 GB site size, 100 GB/month soft bandwidth | Plain CSS/JS with no frameworks; keep diagrams under ~500 KB |
 | Pages cached for ~10 minutes | CSS/JS URLs carry a build timestamp, so readers get new styles after each deploy |
 
@@ -237,6 +251,11 @@ _templates/post.md     Starting point for new articles (not published)
 assets/css/main.css    All styles (light + dark theme)
 assets/js/main.js      Theme toggle, TOC, diagram viewer, code copy, filters
 assets/js/search.js    Client-side search
+assets/js/comments.js  Article comments (load, post)
+assets/js/moderate.js  Comment moderation page
+api/                   Azure Functions comments API (Cosmos DB)
+staticwebapp.config.json  Azure Static Web Apps routes and admin-only pages
+moderate.html          Comment moderation page (/moderate/, admin only)
 assets/images/posts/   One folder of diagrams per article
 blog/  topics/         Article listing and topic pages
 tags.html search.html  Tag index and search page

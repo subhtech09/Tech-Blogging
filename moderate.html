@@ -1,0 +1,35 @@
+---
+layout: page
+title: Moderate comments
+eyebrow: Admin
+description: Approve, reject or delete reader comments. Only signed-in admins can open this page.
+permalink: /moderate/
+prose: false
+sitemap: false
+noindex: true
+scripts:
+  - /assets/js/moderate.js
+---
+{%- comment -%}
+  Comment moderation. Static Web Apps only serves this page and /api/manage/*
+  to users with the "admin" role (see staticwebapp.config.json).
+{%- endcomment -%}
+<div class="moderate" data-moderate data-api="{{ site.comments.api | default: '/api' }}">
+  <div class="moderate-toolbar">
+    <div class="filter-bar" role="group" aria-label="Show comments by status">
+      <button class="filter-chip is-active" type="button" data-status="pending" aria-pressed="true">Pending</button>
+      <button class="filter-chip" type="button" data-status="approved" aria-pressed="false">Approved</button>
+      <button class="filter-chip" type="button" data-status="rejected" aria-pressed="false">Rejected</button>
+    </div>
+    <a class="btn btn-outline" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
+  </div>
+  <p class="moderate-status" data-moderate-status role="status" aria-live="polite"></p>
+  <ol class="moderate-list" data-moderate-list></ol>
+</div>
+<script type="application/json" id="moderate-posts">
+{
+{%- for post in site.posts %}
+  {{ post.comments_id | default: post.slug | jsonify }}: { "title": {{ post.title | jsonify }}, "url": {{ post.url | relative_url | jsonify }} }{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+}
+</script>

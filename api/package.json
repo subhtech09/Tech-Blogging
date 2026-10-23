@@ -1,0 +1,14 @@
+{
+  "name": "architects-handbook-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Comments API for The Architect's Handbook (Azure Functions, deployed with Azure Static Web Apps)",
+  "main": "src/functions/*.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.2.0",
+    "@azure/functions": "^4.6.0"
+  }
+}

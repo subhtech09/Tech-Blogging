@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "COSMOS_CONNECTION_STRING": "AccountEndpoint=https://<account>.documents.azure.com:443/;AccountKey=<key>;",
+    "COSMOS_DATABASE": "blog",
+    "COSMOS_CONTAINER": "comments",
+    "TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA",
+    "IP_HASH_SALT": "<any long random string>",
+    "COMMENTS_AUTO_APPROVE": "false"
+  }
+}

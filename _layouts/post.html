@@ -7,10 +7,10 @@ layout: default
 {%- assign post_words = content | strip_html | number_of_words -%}
 {%- assign post_minutes = post_words | times: 1.0 | divided_by: site.words_per_minute | ceil | at_least: 1 -%}
 {%- assign post_topic_url = '/topics/' | append: post_topic_key | append: '/' | relative_url -%}
-{%- comment -%} Comments show once giscus is configured in _config.yml (see README). {%- endcomment -%}
+{%- comment -%} Comments show once comments are configured in _config.yml (see README). {%- endcomment -%}
 {%- assign post_comments_on = false -%}
-{%- if site.giscus.enabled and page.comments != false -%}
-  {%- if site.giscus.repo_id and site.giscus.repo_id != "" and site.giscus.category_id and site.giscus.category_id != "" -%}
+{%- if site.comments.enabled and page.comments != false -%}
+  {%- if site.comments.turnstile_site_key and site.comments.turnstile_site_key != "" -%}
     {%- assign post_comments_on = true -%}
   {%- endif -%}
 {%- endif -%}

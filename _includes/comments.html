@@ -1,37 +1,45 @@
 {%- comment -%}
-  Comments via giscus — each article gets a GitHub Discussion in this repo.
-  Included by _layouts/post.html only once giscus is configured in _config.yml.
-  The script is injected with the reader's current light/dark theme.
+  Article comments, stored in Azure Cosmos DB via the site's /api functions.
+  Included by _layouts/post.html only once comments are configured in _config.yml.
+  Comments are keyed by the post's slug (or `comments_id` in its front matter),
+  so they survive URL and domain changes. Readers don't sign in: Cloudflare
+  Turnstile, a hidden honeypot field and moderation keep spam out.
 {%- endcomment -%}
-<section class="comments" id="comments" aria-labelledby="comments-title">
+{%- assign comments_key = page.comments_id | default: page.slug -%}
+<section class="comments" id="comments" aria-labelledby="comments-title" data-comments data-api="{{ site.comments.api | default: '/api' }}" data-slug="{{ comments_key }}">
   <h2 id="comments-title" class="comments-title">Comments</h2>
-  <p class="comments-note">Questions, corrections and war stories welcome. Sign in with GitHub to comment.</p>
-  <div class="giscus"></div>
-  <script>
-    (function () {
-      var root = document.documentElement;
-      var dark = root.getAttribute('data-theme') === 'dark' ||
-        (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      var cfg = {
-        'data-repo': {{ site.giscus.repo | jsonify }},
-        'data-repo-id': {{ site.giscus.repo_id | jsonify }},
-        'data-category': {{ site.giscus.category | jsonify }},
-        'data-category-id': {{ site.giscus.category_id | jsonify }},
-        'data-mapping': {{ site.giscus.mapping | default: "pathname" | jsonify }},
-        'data-strict': '1',
-        'data-reactions-enabled': '1',
-        'data-emit-metadata': '0',
-        'data-input-position': 'top',
-        'data-lang': 'en',
-        'data-loading': 'lazy',
-        'data-theme': dark ? 'transparent_dark' : 'light'
-      };
-      var s = document.createElement('script');
-      s.src = 'https://giscus.app/client.js';
-      s.async = true;
-      s.crossOrigin = 'anonymous';
-      Object.keys(cfg).forEach(function (k) { s.setAttribute(k, cfg[k]); });
-      document.currentScript.parentNode.appendChild(s);
-    })();
-  </script>
+  <p class="comments-note">Questions, corrections and war stories welcome. New comments appear after a quick review.</p>
+
+  <ol class="comment-list" data-comment-list></ol>
+  <p class="comments-status" data-comments-status role="status" aria-live="polite">Loading comments…</p>
+
+  <form class="comment-form" data-comment-form novalidate>
+    <h3 class="comment-form-title">Leave a comment</h3>
+    <div class="comment-form-row">
+      <div class="field">
+        <label for="comment-name">Name</label>
+        <input class="field-input" id="comment-name" name="name" type="text" maxlength="60" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label for="comment-email">Email <span class="field-hint">optional, never shown</span></label>
+        <input class="field-input" id="comment-email" name="email" type="email" maxlength="254" autocomplete="email">
+      </div>
+    </div>
+    <div class="field">
+      <label for="comment-body">Comment</label>
+      <textarea class="field-input" id="comment-body" name="body" rows="5" minlength="2" maxlength="4000" required></textarea>
+    </div>
+    <div class="field-trap" aria-hidden="true">
+      <label for="comment-website">Leave this field empty</label>
+      <input id="comment-website" name="website" type="text" tabindex="-1" autocomplete="off">
+    </div>
+    <div class="cf-turnstile" data-sitekey="{{ site.comments.turnstile_site_key }}" data-theme="auto" data-size="flexible"></div>
+    <div class="comment-form-actions">
+      <button class="btn btn-primary" type="submit">{% include icon.html name="comment" %}Post comment</button>
+      <p class="comment-form-status" data-comment-form-status role="status" aria-live="polite"></p>
+    </div>
+    <p class="comment-form-privacy">Your name and comment are published once approved. Your email is only used if I need to reply to you privately.</p>
+  </form>
 </section>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="{{ '/assets/js/comments.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>

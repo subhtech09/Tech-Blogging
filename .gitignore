@@ -8,3 +8,7 @@ Gemfile.lock
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Azure Functions (api/)
+node_modules/
+local.settings.json
