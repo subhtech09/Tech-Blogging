@@ -16,6 +16,7 @@
   var form = section.querySelector('[data-comment-form]');
   var formStatus = section.querySelector('[data-comment-form-status]');
   var submitBtn = form.querySelector('button[type="submit"]');
+  var countLabel = document.querySelector('[data-comment-count]');
   var field = function (name) { return form.elements.namedItem(name); };
   var dateFmt = new Intl.DateTimeFormat(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -59,8 +60,11 @@
     return li;
   }
 
+  // Keeps the empty-state message and the byline's comment count in step with the list.
   function showEmptyState() {
-    listStatus.textContent = list.children.length ? '' : 'No comments yet. Be the first.';
+    var count = list.children.length;
+    listStatus.textContent = count ? '' : 'No comments yet. Be the first.';
+    if (countLabel) countLabel.textContent = count ? count + (count === 1 ? ' comment' : ' comments') : 'Comments';
   }
 
   /* ---------- Load approved comments ------------------------------------ */

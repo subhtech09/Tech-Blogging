@@ -52,7 +52,7 @@ layout: default
             <span class="view-count" data-view-count="https://{{ site.goatcounter.code }}.goatcounter.com" hidden>{% include icon.html name="eye" %}<span data-view-count-value></span></span>
             {%- endif %}
             {%- if post_comments_on %}
-            <a class="byline-link" href="#comments">{% include icon.html name="comment" %}Comments</a>
+            <a class="byline-link" href="#comments">{% include icon.html name="comment" %}<span data-comment-count>Comments</span></a>
             {%- endif %}
           </span>
         </div>
