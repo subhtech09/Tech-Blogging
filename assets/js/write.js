@@ -466,39 +466,35 @@
     });
   }
 
+  // Shows the open draft in the dropdown, or the placeholder for a new article.
   function highlightCurrent() {
-    draftsList.querySelectorAll('[data-id]').forEach(function (b) {
-      b.classList.toggle('is-current', b.getAttribute('data-id') === state.id);
-    });
+    var listed = Array.prototype.some.call(draftsList.options, function (o) { return o.value === state.id; });
+    draftsList.value = listed ? state.id : '';
   }
 
   function refreshList() {
     return request(api).then(function (data) {
-      draftsList.textContent = '';
-      (data.drafts || []).forEach(function (d) {
-        var li = document.createElement('li');
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.className = 'write-draft';
-        b.setAttribute('data-id', d.id);
-        var title = document.createElement('span');
-        title.className = 'write-draft-title';
-        title.textContent = d.title || 'Untitled';
-        var meta = document.createElement('span');
-        meta.className = 'write-draft-meta';
-        meta.textContent = (d.status === 'published' ? 'Published · ' : 'Draft · ') + (d.updatedAt ? dateFmt.format(new Date(d.updatedAt)) : '');
-        b.appendChild(title);
-        b.appendChild(meta);
-        b.addEventListener('click', function () {
-          if (d.id !== state.id && confirmDiscard()) loadDraft(d.id);
-        });
-        li.appendChild(b);
-        draftsList.appendChild(li);
+      var drafts = data.drafts || [];
+      draftsList.length = 1;   // keep the "Select an article" placeholder
+      drafts.forEach(function (d) {
+        var option = document.createElement('option');
+        option.value = d.id;
+        option.textContent = (d.title || 'Untitled') + ' — ' + (d.status === 'published' ? 'Published' : 'Draft') +
+          (d.updatedAt ? ', ' + dateFmt.format(new Date(d.updatedAt)) : '');
+        draftsList.appendChild(option);
       });
-      draftsStatus.textContent = data.drafts && data.drafts.length ? '' : 'No drafts yet.';
+      draftsList.disabled = !drafts.length;
+      draftsStatus.textContent = drafts.length ? '' : 'No drafts yet.';
       highlightCurrent();
     }).catch(function (err) { draftsStatus.textContent = err.message; });
   }
+
+  draftsList.addEventListener('change', function () {
+    var id = draftsList.value;
+    if (!id || id === state.id) return highlightCurrent();
+    if (confirmDiscard()) loadDraft(id);
+    else highlightCurrent();
+  });
 
   function busy(on) {
     state.busy = on;

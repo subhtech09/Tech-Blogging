@@ -1145,41 +1145,23 @@ textarea.field-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .moderate-delete { margin-left: auto; }
 
 /* Article editor (/write/) */
-.write { display: grid; gap: 32px; align-items: start; }
-@media (min-width: 1100px) { .write { grid-template-columns: 240px minmax(0, 1fr); gap: 24px; } }
+.write { display: grid; gap: 24px; }
 .write-drafts {
-  display: grid;
-  gap: 12px;
-  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 16px 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
 }
-@media (min-width: 1100px) { .write-drafts { position: sticky; top: calc(var(--header-h) + 16px); } }
-.write-drafts-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
 .write-drafts-title { font-size: 1.125rem; }
-.write-drafts-head .btn, .write-signout { padding: 8px 14px; font-size: .875rem; }
-.write-drafts-status { margin: 0; color: var(--text-muted); font-size: .875rem; }
+.write-drafts-select { flex: 1 1 320px; width: auto; min-width: 0; }
+.write-drafts-select:disabled { opacity: .7; }
+.write-drafts .btn { padding: 9px 16px; font-size: .875rem; }
+.write-drafts-status { flex-basis: 100%; margin: 0; color: var(--text-muted); font-size: .875rem; }
 .write-drafts-status:empty { display: none; }
-.write-drafts-list { display: grid; gap: 4px; max-height: 50vh; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
-.write-draft {
-  display: grid;
-  gap: 2px;
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  background: none;
-  color: var(--text);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-.write-draft:hover { background: var(--surface-2); }
-.write-draft.is-current { border-color: var(--accent-2); background: var(--surface-2); }
-.write-draft-title { color: var(--text-strong); font-size: .9375rem; font-weight: 600; line-height: 1.35; }
-.write-draft-meta { color: var(--text-muted); font-size: .75rem; }
-.write-signout { justify-self: start; }
 
 .write-main { display: grid; gap: 16px; min-width: 0; }
 .write-meta { display: grid; gap: 14px; }

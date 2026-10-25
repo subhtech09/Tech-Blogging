@@ -19,15 +19,15 @@ scripts:
   normal deploy workflow puts it live.
 {%- endcomment -%}
 <div class="write" data-write data-api="{{ site.comments.api | default: '/api' }}">
-  <aside class="write-drafts" aria-labelledby="write-drafts-title">
-    <div class="write-drafts-head">
-      <h2 id="write-drafts-title" class="write-drafts-title">Drafts</h2>
-      <button class="btn btn-secondary" type="button" data-action="new">New article</button>
-    </div>
+  <section class="write-drafts" aria-labelledby="write-drafts-title">
+    <h2 id="write-drafts-title" class="write-drafts-title"><label for="write-draft-select">Drafts</label></h2>
+    <select class="field-input write-drafts-select" id="write-draft-select" data-drafts-list>
+      <option value="">----- Select an article to edit -------</option>
+    </select>
+    <button class="btn btn-secondary" type="button" data-action="new">New article</button>
+    <a class="btn btn-outline" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
     <p class="write-drafts-status" data-drafts-status role="status" aria-live="polite">Loading drafts…</p>
-    <ol class="write-drafts-list" data-drafts-list></ol>
-    <a class="btn btn-outline write-signout" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
-  </aside>
+  </section>
 
   <div class="write-main">
     <form class="write-meta" data-write-form novalidate>
