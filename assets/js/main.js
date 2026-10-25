@@ -32,6 +32,22 @@
     });
   }
 
+  /* ---------- Admin-only header link ------------------------------------ */
+  // Azure Static Web Apps reports the signed-in user at /.auth/me. Readers are
+  // never signed in, so the link stays hidden for them. This only hides the
+  // link; /moderate/ itself is protected by staticwebapp.config.json.
+  var adminLinks = document.querySelectorAll('[data-admin-only]');
+  if (adminLinks.length && window.fetch) {
+    fetch('/.auth/me', { credentials: 'same-origin' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        var roles = (data && data.clientPrincipal && data.clientPrincipal.userRoles) || [];
+        if (roles.indexOf('admin') === -1) return;
+        adminLinks.forEach(function (link) { link.hidden = false; });
+      })
+      .catch(function () { /* not on Static Web Apps, e.g. local preview */ });
+  }
+
   /* ---------- Mobile navigation ----------------------------------------- */
   var navToggle = document.querySelector('.nav-toggle');
   if (navToggle) {
