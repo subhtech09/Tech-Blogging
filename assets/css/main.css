@@ -328,7 +328,6 @@ p { margin: 0; }
 }
 .container--narrow { max-width: calc(780px + var(--gutter) * 2); }
 .container--article { max-width: calc(760px + var(--gutter) * 2); }
-.container--wide { max-width: calc(1344px + var(--gutter) * 2); }
 
 .section { padding-block: 64px; }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
