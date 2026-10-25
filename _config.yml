@@ -11,10 +11,10 @@ lang: en
 timezone: UTC               # set to your local zone, e.g. Asia/Kolkata
 
 # -----------------------------------------------------------------------------
-#  Site address — hosted on Azure Static Web Apps, served from the domain root.
-#  If you add a custom domain, update url (keep baseurl: "").
+#  Site address — hosted on Azure Static Web Apps at the custom domain
+#  theintelligencestack.tech (DNS at Cloudflare), served from the domain root.
 # -----------------------------------------------------------------------------
-url: "https://purple-cliff-09b300910.5.azurestaticapps.net"
+url: "https://theintelligencestack.tech"
 baseurl: ""                 # Azure Static Web Apps serves the site from the domain root
 
 # Default social-preview image (used when a post has no `image:`)

@@ -3,7 +3,7 @@
 A static tech blog about **data architecture, data engineering and AI engineering**,
 built with [Jekyll](https://jekyllrb.com/) and hosted on **Azure Static Web Apps**.
 
-Live URL: **https://purple-cliff-09b300910.5.azurestaticapps.net/**
+Live URL: **https://theintelligencestack.tech/** (the Static Web App address https://purple-cliff-09b300910.5.azurestaticapps.net/ also works)
 
 - Light mint-green and sky-blue palette with automatic light and dark mode
 - Articles are Markdown files; architecture diagrams are plain `.jpg` files
@@ -25,8 +25,10 @@ the site with Jekyll (Ruby 3.3), then deploys `_site` and the comments API in
 `api/` to Azure. The **Actions** tab shows each run; when it is green the
 site is live.
 
-> **Custom domain?** Add it in the Static Web App (**Custom domains**), then set
-> `url` in `_config.yml` to the new address. Keep `baseurl: ""`.
+> **Custom domain:** `theintelligencestack.tech` (bought and DNS-hosted at
+> Cloudflare, records set to *DNS only*) is the default domain in the Static Web
+> App (**Custom domains**); `www` redirects to it. If the domain changes, update
+> `url` in `_config.yml` (keep `baseurl: ""`) and the Turnstile widget's hostnames.
 
 ---
 

@@ -2,7 +2,7 @@
 layout: default
 ---
 <section class="page-hero band">
-  <div class="container">
+  <div class="container{% if page.wide %} container--wide{% endif %}">
     {%- if page.eyebrow %}
     <p class="eyebrow">{{ page.eyebrow }}</p>
     {%- endif %}
@@ -15,7 +15,7 @@ layout: default
 
 <section class="section section--page">
   {%- if page.prose == false %}
-  <div class="container">
+  <div class="container{% if page.wide %} container--wide{% endif %}">
     {{ content }}
   </div>
   {%- else %}
