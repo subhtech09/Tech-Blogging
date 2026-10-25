@@ -1,4 +1,4 @@
-# The Architect's Handbook
+# The Intelligence Stack
 
 A static tech blog about **data architecture, data engineering and AI engineering**,
 built with [Jekyll](https://jekyllrb.com/) and hosted on **Azure Static Web Apps**.
@@ -240,15 +240,15 @@ analytics service. It records each visit and lets the article page show its
 total views (and gives you a stats dashboard).
 
 1. Sign up at <https://www.goatcounter.com/signup>. The **code** you choose
-   becomes your dashboard address, e.g. `architects-handbook` →
-   `https://architects-handbook.goatcounter.com`.
+   becomes your dashboard address, e.g. `tech-blogging` →
+   `https://tech-blogging.goatcounter.com`.
 2. In the dashboard open **Settings**, tick
    **"Allow adding visitor counts on your website"** and save.
 3. Put the code in `_config.yml`, then commit and push:
 
    ```yaml
    goatcounter:
-     code: "architects-handbook"
+     code: "tech-blogging"
    ```
 
 Notes: visits from `localhost` are not counted; GoatCounter caches the totals

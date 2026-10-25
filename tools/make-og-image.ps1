@@ -5,10 +5,10 @@
   Run it again whenever you change the site title or tagline.
 
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File tools\make-og-image.ps1 -Title "The Architect's Handbook" -Url "purple-cliff-09b300910.5.azurestaticapps.net"
+  powershell -ExecutionPolicy Bypass -File tools\make-og-image.ps1 -Title "The Intelligence Stack" -Url "purple-cliff-09b300910.5.azurestaticapps.net"
 #>
 param(
-  [string]$Title   = 'The Architect''s Handbook',
+  [string]$Title   = 'The Intelligence Stack',
   [string]$Tagline = ('Data architecture  {0}  Data engineering  {0}  AI engineering' -f [char]0x00B7),
   [string]$Url     = 'purple-cliff-09b300910.5.azurestaticapps.net'
 )

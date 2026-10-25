@@ -1,5 +1,5 @@
 {
-  "name": "architects-handbook-editor",
+  "name": "intelligence-stack-editor",
   "version": "1.0.0",
   "private": true,
   "description": "Builds assets/js/editor.bundle.js (TipTap editor for the /write/ page). Run: npm install && npm run build",

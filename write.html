@@ -5,6 +5,7 @@ eyebrow: Admin
 description: Write, save and publish articles. Only signed-in admins can open this page.
 permalink: /write/
 prose: false
+wide: true
 sitemap: false
 noindex: true
 scripts:
@@ -66,7 +67,7 @@ scripts:
 
     <div class="editor-toolbar" data-toolbar role="toolbar" aria-label="Formatting">
       <div class="tb-group">
-        <select class="tb-select" data-block aria-label="Text style">
+        <select class="tb-select" data-block aria-label="Text style" title="Text style">
           <option value="paragraph">Normal text</option>
           <option value="2">Heading 2</option>
           <option value="3">Heading 3</option>
@@ -80,7 +81,7 @@ scripts:
         <button class="tb-btn" type="button" data-cmd="strike" aria-label="Strikethrough" title="Strikethrough"><s>S</s></button>
         <button class="tb-btn" type="button" data-cmd="highlight" aria-label="Highlight" title="Highlight"><mark>H</mark></button>
         <select class="tb-select" data-color aria-label="Text colour" title="Text colour">
-          <option value="">Default colour</option>
+          <option value="">Colour</option>
           <option value="mint">Mint</option>
           <option value="sky">Sky</option>
           <option value="teal">Teal</option>
@@ -90,16 +91,16 @@ scripts:
         <button class="tb-btn" type="button" data-cmd="link" aria-label="Link (Ctrl+K)" title="Link (Ctrl+K)">{% include icon.html name="link" %}</button>
       </div>
       <div class="tb-group">
-        <button class="tb-btn" type="button" data-cmd="bulletList" aria-label="Bulleted list" title="Bulleted list">• List</button>
-        <button class="tb-btn" type="button" data-cmd="orderedList" aria-label="Numbered list" title="Numbered list">1. List</button>
-        <button class="tb-btn" type="button" data-cmd="blockquote" aria-label="Quote" title="Quote">“ ”</button>
+        <button class="tb-btn" type="button" data-cmd="bulletList" aria-label="Bulleted list" title="Bulleted list">{% include icon.html name="list-bullet" %}</button>
+        <button class="tb-btn" type="button" data-cmd="orderedList" aria-label="Numbered list" title="Numbered list">{% include icon.html name="list-number" %}</button>
+        <button class="tb-btn" type="button" data-cmd="blockquote" aria-label="Quote" title="Quote">{% include icon.html name="quote" %}</button>
         <select class="tb-select" data-callout aria-label="Callout box" title="Callout box">
-          <option value="">No callout</option>
+          <option value="">Callout</option>
           <option value="note">Note box</option>
           <option value="tip">Tip box</option>
           <option value="warning">Watch out box</option>
         </select>
-        <button class="tb-btn" type="button" data-cmd="codeBlock" aria-label="Code block" title="Code block">{ }</button>
+        <button class="tb-btn" type="button" data-cmd="codeBlock" aria-label="Code block" title="Code block">{% include icon.html name="code-block" %}</button>
         <select class="tb-select" data-language aria-label="Code language" title="Code language" hidden>
           <option value="">Plain text</option>
           <option value="python">Python</option>
@@ -117,8 +118,12 @@ scripts:
           <option value="hcl">Terraform (HCL)</option>
           <option value="dockerfile">Dockerfile</option>
         </select>
-        <button class="tb-btn" type="button" data-cmd="horizontalRule" aria-label="Divider" title="Divider">―</button>
-        <button class="tb-btn" type="button" data-cmd="table" aria-label="Insert table" title="Insert table">Table</button>
+        <button class="tb-btn" type="button" data-cmd="horizontalRule" aria-label="Divider" title="Divider">{% include icon.html name="divider" %}</button>
+        <button class="tb-btn" type="button" data-cmd="table" aria-label="Insert table" title="Insert table">{% include icon.html name="table" %}</button>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" type="button" data-cmd="undo" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)">{% include icon.html name="undo" %}</button>
+        <button class="tb-btn" type="button" data-cmd="redo" aria-label="Redo (Ctrl+Shift+Z)" title="Redo (Ctrl+Shift+Z)">{% include icon.html name="redo" %}</button>
       </div>
       <div class="tb-group" data-table-tools hidden>
         <button class="tb-btn" type="button" data-cmd="addRowAfter" title="Add row below">+ Row</button>
@@ -131,10 +136,6 @@ scripts:
         <button class="tb-btn" type="button" data-cmd="caption" title="Edit the image caption">Caption</button>
         <button class="tb-btn" type="button" data-cmd="alt" title="Describe the image for screen readers">Alt text</button>
         <button class="tb-btn" type="button" data-cmd="removeImage" title="Remove the image">Remove image</button>
-      </div>
-      <div class="tb-group">
-        <button class="tb-btn" type="button" data-cmd="undo" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)">↶</button>
-        <button class="tb-btn" type="button" data-cmd="redo" aria-label="Redo (Ctrl+Shift+Z)" title="Redo (Ctrl+Shift+Z)">↷</button>
       </div>
     </div>
 

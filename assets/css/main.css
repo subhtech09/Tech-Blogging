@@ -1,5 +1,5 @@
 /* ==========================================================================
-   The Architect's Handbook — main stylesheet
+   The Intelligence Stack — main stylesheet
    Mint-green + sky-blue palette on airy light surfaces, with a matching
    dark theme. Plain CSS, no build step required.
 
@@ -328,6 +328,7 @@ p { margin: 0; }
 }
 .container--narrow { max-width: calc(780px + var(--gutter) * 2); }
 .container--article { max-width: calc(760px + var(--gutter) * 2); }
+.container--wide { max-width: calc(1680px + var(--gutter) * 2); }
 
 .section { padding-block: 64px; }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
@@ -1139,7 +1140,7 @@ textarea.field-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 
 /* Article editor (/write/) */
 .write { display: grid; gap: 32px; align-items: start; }
-@media (min-width: 1100px) { .write { grid-template-columns: 260px minmax(0, 1fr); } }
+@media (min-width: 1100px) { .write { grid-template-columns: 240px minmax(0, 1fr); gap: 24px; } }
 .write-drafts {
   display: grid;
   gap: 12px;
@@ -1189,23 +1190,23 @@ textarea.field-input { min-height: 120px; resize: vertical; line-height: 1.6; }
   z-index: 5;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 12px;
-  padding: 8px;
+  gap: 4px 6px;
+  padding: 6px 8px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius) var(--radius) 0 0;
   background: var(--surface-2);
 }
 .editor-toolbar[hidden] { display: none; }
 .tb-group { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
-.tb-group + .tb-group { padding-left: 12px; border-left: 1px solid var(--border-strong); }
+.tb-group + .tb-group { padding-left: 6px; border-left: 1px solid var(--border-strong); }
 .tb-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  min-width: 32px;
-  height: 32px;
-  padding: 0 8px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 6px;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   background: none;
@@ -1217,12 +1218,12 @@ textarea.field-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .tb-btn:hover { background: var(--surface); border-color: var(--border); }
 .tb-btn.is-active { background: var(--btn-bg); color: var(--btn-text); }
 .tb-btn:disabled { opacity: .4; cursor: default; background: none; border-color: transparent; }
-.tb-btn .icon { width: 16px; height: 16px; }
+.tb-btn .icon { width: 18px; height: 18px; }
 .tb-btn mark { padding: 0 2px; background: var(--mark-bg); color: inherit; }
 .tb-btn code { font-family: var(--font-mono); font-size: .75rem; }
 .tb-select {
-  height: 32px;
-  padding: 0 8px;
+  height: 30px;
+  padding: 0 4px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   The Architect's Handbook — site behaviour (no dependencies)
+   The Intelligence Stack — site behaviour (no dependencies)
    ========================================================================== */
 (function () {
   'use strict';

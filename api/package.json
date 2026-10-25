@@ -1,8 +1,8 @@
 {
-  "name": "architects-handbook-api",
+  "name": "intelligence-stack-api",
   "version": "1.0.0",
   "private": true,
-  "description": "Comments API for The Architect's Handbook (Azure Functions, deployed with Azure Static Web Apps)",
+  "description": "Comments API for The Intelligence Stack (Azure Functions, deployed with Azure Static Web Apps)",
   "main": "src/functions/*.js",
   "engines": {
     "node": ">=20"

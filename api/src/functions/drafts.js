@@ -185,18 +185,41 @@ async function storeImage(id, buffer, declaredType) {
   return { file, src: `/api/manage/drafts/${id}/images/${file}` };
 }
 
+// Blob Storage failures, explained for the admin (the only caller).
+const STORAGE_HINTS = {
+  AuthenticationFailed: 'the account key in STORAGE_CONNECTION_STRING is wrong — copy the connection string again from Access keys',
+  KeyBasedAuthenticationNotPermitted: 'storage account key access is disabled — turn on "Allow storage account key access" under Configuration',
+  AuthorizationFailure: 'the storage account blocks this network — set Networking → Public network access to "Enabled from all networks"',
+  AuthorizationPermissionMismatch: 'the credentials in STORAGE_CONNECTION_STRING lack write permission — use the account connection string, not a SAS',
+  ContainerNotFound: 'the container was not found — check STORAGE_CONTAINER (default "images")',
+  ENOTFOUND: 'the storage account name in STORAGE_CONNECTION_STRING does not exist'
+};
+
+function storageError(err) {
+  const code = (err && (err.code || (err.details && err.details.errorCode))) || '';
+  const hint = STORAGE_HINTS[code];
+  const detail = [err && err.statusCode, code].filter(Boolean).join(' ');
+  return 'Blob Storage refused the image' + (detail ? ` (${detail})` : '') + (hint ? `: ${hint}.` : '.');
+}
+
 async function uploadImage(request, context) {
   const denied = guard(request);
   if (denied) return denied;
   const length = Number(request.headers.get('content-length') || 0);
   if (length > IMAGE_MAX) return json(413, { error: 'Images can be at most 5 MB.' });
+  let buffer;
   try {
-    const buffer = Buffer.from(await request.arrayBuffer());
+    buffer = Buffer.from(await request.arrayBuffer());
+  } catch (err) {
+    context.error('Reading the uploaded image failed', err);
+    return json(400, { error: 'The image could not be read from the request.' });
+  }
+  try {
     const result = await storeImage(request.params.id, buffer, (request.headers.get('content-type') || '').split(';')[0].trim());
     return result.error ? json(400, result) : json(201, result);
   } catch (err) {
     context.error('Image upload failed', err);
-    return json(500, { error: 'Could not upload the image.' });
+    return json(500, { error: storageError(err) });
   }
 }
 
@@ -253,13 +276,19 @@ async function importImage(request, context) {
   }
   if (!input || typeof input.url !== 'string' || input.url.length > 2048) return json(400, { error: 'Invalid image address.' });
 
+  let image;
   try {
-    const { buffer, type } = await fetchPublicImage(input.url);
-    const result = await storeImage(request.params.id, buffer, type);
-    return result.error ? json(400, result) : json(201, result);
+    image = await fetchPublicImage(input.url);
   } catch (err) {
     context.log('Image import failed', input.url, err.message);
     return json(400, { error: err.message || 'The image could not be downloaded.' });
+  }
+  try {
+    const result = await storeImage(request.params.id, image.buffer, image.type);
+    return result.error ? json(400, result) : json(201, result);
+  } catch (err) {
+    context.error('Storing an imported image failed', err);
+    return json(500, { error: storageError(err) });
   }
 }
 
