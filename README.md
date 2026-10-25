@@ -32,7 +32,39 @@ site is live.
 
 ## 2. Write a new article
 
-### Option A — helper script (Windows)
+### Option A — in the browser (`/write/`)
+
+Sign in as admin (the pen icon appears in the header) and open **`/write/`**.
+
+- Fill in the title, description, topic and tags, then write in the editor:
+  Heading 2–4, bold, italic, underline, strikethrough, highlight, theme text
+  colours, lists, quotes, note/tip/warning boxes, code blocks, tables, links.
+- **Images:** paste or drag them straight into the text (screenshots, copied
+  images, files, or content copied from a web page). Big images are resized
+  in the browser before upload. Select an image to add a caption or alt text.
+- **Save draft** (or Ctrl+S) stores the draft in Cosmos DB and its images in
+  Blob Storage. Drafts are listed on the left; nothing is public yet.
+- **Publish** commits the post to `_posts/` and its images to
+  `assets/images/posts/<slug>/` in one commit; the deploy workflow puts it live
+  in about 3 minutes. Publishing the same draft again updates the article (the
+  URL slug is fixed after the first publish).
+- Deleting a draft does not unpublish its article.
+
+API settings for writing (Static Web Apps → **Environment variables**):
+
+| Setting | Value |
+|---|---|
+| `COSMOS_DRAFTS_CONTAINER` | Drafts container (default `draft_articles`, partition key **`/id`**) |
+| `STORAGE_CONNECTION_STRING` | Storage account connection string |
+| `STORAGE_CONTAINER` | Private container for draft images (default `images`) |
+| `GITHUB_TOKEN` | Fine-grained token for this repo only, *Contents: read and write* |
+| `GITHUB_REPO` / `GITHUB_BRANCH` | Defaults `subhtech09/Tech-Blogging` / `main` |
+
+The editor is bundled into `assets/js/editor.bundle.js` from `tools/editor/`.
+After changing `tools/editor/src/index.js`, run `npm install && npm run build`
+in that folder and commit the new bundle.
+
+### Option B — helper script (Windows)
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\new-post.ps1 -Title "Streaming joins in practice" -Topic data-engineering
@@ -41,7 +73,7 @@ powershell -ExecutionPolicy Bypass -File tools\new-post.ps1 -Title "Streaming jo
 This creates `_posts/2026-10-09-streaming-joins-in-practice.md` from the
 template and an empty diagram folder `assets/images/posts/streaming-joins-in-practice/`.
 
-### Option B — by hand
+### Option C — by hand
 
 1. Copy `_templates/post.md` to `_posts/YYYY-MM-DD-your-slug.md`.
 2. Create the folder `assets/images/posts/your-slug/` for its diagrams.
@@ -253,9 +285,12 @@ assets/js/main.js      Theme toggle, TOC, diagram viewer, code copy, filters
 assets/js/search.js    Client-side search
 assets/js/comments.js  Article comments (load, post)
 assets/js/moderate.js  Comment moderation page
+assets/js/write.js     Article editor page (drafts, image paste, publish)
+assets/js/editor.bundle.js  Editor library, built from tools/editor/
 api/                   Azure Functions comments API (Cosmos DB)
 staticwebapp.config.json  Azure Static Web Apps routes and admin-only pages
 moderate.html          Comment moderation page (/moderate/, admin only)
+write.html             Article editor (/write/, admin only)
 assets/images/posts/   One folder of diagrams per article
 blog/  topics/         Article listing and topic pages
 tags.html search.html  Tag index and search page

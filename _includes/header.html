@@ -14,6 +14,9 @@
     </nav>
 
     <div class="header-actions">
+      <a class="icon-btn" href="{{ '/write/' | relative_url }}" data-admin-only hidden aria-label="Write an article" title="Write an article">
+        {% include icon.html name="pen" %}
+      </a>
       <a class="icon-btn" href="{{ '/moderate/' | relative_url }}" data-admin-only hidden aria-label="Moderate comments" title="Moderate comments">
         {% include icon.html name="shield" %}
       </a>

@@ -7,6 +7,12 @@
     "COSMOS_CONTAINER": "comments",
     "TURNSTILE_SECRET_KEY": "1x0000000000000000000000000000000AA",
     "IP_HASH_SALT": "<any long random string>",
-    "COMMENTS_AUTO_APPROVE": "false"
+    "COMMENTS_AUTO_APPROVE": "false",
+    "COSMOS_DRAFTS_CONTAINER": "draft_articles",
+    "STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=<account>;AccountKey=<key>;EndpointSuffix=core.windows.net",
+    "STORAGE_CONTAINER": "images",
+    "GITHUB_TOKEN": "<fine-grained token: this repo only, Contents read and write>",
+    "GITHUB_REPO": "subhtech09/Tech-Blogging",
+    "GITHUB_BRANCH": "main"
   }
 }

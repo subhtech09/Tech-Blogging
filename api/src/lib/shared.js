@@ -9,19 +9,20 @@ const REQUIRED_SETTINGS = ['COSMOS_CONNECTION_STRING', 'TURNSTILE_SECRET_KEY', '
 const SLUG_RE = /^[A-Za-z0-9][A-Za-z0-9_-]{0,199}$/;
 const ID_RE = /^[0-9a-f-]{36}$/;
 
+let cosmos;
 let container;
 
 function missingSettings() {
   return REQUIRED_SETTINGS.filter((name) => !process.env[name]);
 }
 
+function getDatabase() {
+  if (!cosmos) cosmos = new CosmosClient(process.env.COSMOS_CONNECTION_STRING);
+  return cosmos.database(process.env.COSMOS_DATABASE || 'blog');
+}
+
 function getContainer() {
-  if (!container) {
-    const client = new CosmosClient(process.env.COSMOS_CONNECTION_STRING);
-    container = client
-      .database(process.env.COSMOS_DATABASE || 'blog')
-      .container(process.env.COSMOS_CONTAINER || 'comments');
-  }
+  if (!container) container = getDatabase().container(process.env.COSMOS_CONTAINER || 'comments');
   return container;
 }
 
@@ -92,6 +93,7 @@ module.exports = {
   SLUG_RE,
   ID_RE,
   missingSettings,
+  getDatabase,
   getContainer,
   json,
   isAdmin,
