@@ -26,22 +26,6 @@ layout: default
 </section>
 
 {%- if site.posts.size > 0 %}
-{%- assign home_featured = site.posts | where: "featured", true | first -%}
-{%- unless home_featured %}{% assign home_featured = site.posts.first %}{% endunless %}
-<section class="section">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <p class="eyebrow">Featured</p>
-        <h2 class="section-title">Start here</h2>
-      </div>
-    </div>
-    {% include post-card.html post=home_featured featured=true %}
-  </div>
-</section>
-
-{%- assign home_recent = site.posts | where_exp: "p", "p.url != home_featured.url" -%}
-{%- if home_recent.size > 0 %}
 <section class="section section--alt">
   <div class="container">
     <div class="section-head">
@@ -51,14 +35,13 @@ layout: default
       </div>
       <a class="link-arrow" href="{{ '/blog/' | relative_url }}">All articles {% include icon.html name="arrow-right" %}</a>
     </div>
-    <div class="post-grid">
-      {%- for post in home_recent limit: 6 %}
-      {% include post-card.html post=post %}
+    <div class="post-list">
+      {%- for post in site.posts limit: 6 %}
+      {% include post-card.html post=post row=true %}
       {%- endfor %}
     </div>
   </div>
 </section>
-{%- endif %}
 {%- endif %}
 
 <section class="section">

@@ -8,7 +8,6 @@ description: "One or two sentences shown under the title, on cards and in search
 category: __TOPIC__              # data-architecture | data-engineering | ai-engineering
 tags: [tag-one, tag-two]
 # image: /assets/images/posts/__SLUG__/cover.jpg   # optional: card thumbnail + social preview
-# featured: true                                   # optional: pin to "Start here" on the home page
 # last_modified_at: __DATE__                       # optional: shows "Updated <date>"
 ---
 

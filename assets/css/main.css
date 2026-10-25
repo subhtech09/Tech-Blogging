@@ -328,7 +328,7 @@ p { margin: 0; }
 }
 .container--narrow { max-width: calc(780px + var(--gutter) * 2); }
 .container--article { max-width: calc(760px + var(--gutter) * 2); }
-.container--wide { max-width: calc(1680px + var(--gutter) * 2); }
+.container--wide { max-width: calc(1344px + var(--gutter) * 2); }
 
 .section { padding-block: 64px; }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
@@ -819,13 +819,19 @@ p { margin: 0; }
 .read-more .icon { width: 16px; height: 16px; transition: transform .2s var(--ease); }
 .post-card:hover .read-more .icon { transform: translateX(3px); }
 
-@media (min-width: 860px) {
-  .post-card--featured { display: grid; grid-template-columns: 1.15fr 1fr; }
-  .post-card--featured .post-card-media { aspect-ratio: auto; min-height: 360px; border-bottom: 0; border-right: 1px solid var(--border); }
-  .post-card--featured .post-card-body { justify-content: center; gap: 16px; padding: 40px 44px; }
-  .post-card--featured .post-card-title { font-size: clamp(1.5rem, 2.4vw, 2rem); line-height: 1.2; letter-spacing: -.02em; }
-  .post-card--featured .post-card-excerpt { font-size: 1.0625rem; -webkit-line-clamp: 4; }
-  .post-card--featured .post-card-footer { margin-top: 8px; }
+/* Horizontal card (home page "Recent articles"): image left, then title,
+   description and details, left aligned. Stacks on phones. */
+.post-list { display: grid; gap: 20px; }
+.post-card--row .post-card-body { gap: 10px; text-align: left; }
+.post-card--row .post-card-title { order: 1; font-size: 1.375rem; line-height: 1.25; letter-spacing: -.015em; }
+.post-card--row .post-card-excerpt { order: 2; font-size: 1rem; }
+.post-card--row .post-card-meta { order: 3; margin-top: 4px; }
+.post-card--row .post-card-footer { order: 4; }
+@media (min-width: 640px) {
+  .post-card--row { display: grid; grid-template-columns: minmax(200px, 32%) 1fr; }
+  .post-card--row .post-card-media { aspect-ratio: auto; min-height: 190px; border-bottom: 0; border-right: 1px solid var(--border); }
+  .post-card--row .post-card-body { justify-content: center; padding: 24px 28px; }
+}
 }
 
 /* Call-to-action band */

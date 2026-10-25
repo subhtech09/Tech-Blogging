@@ -90,7 +90,6 @@ description: "One or two sentences — shown under the title, on cards, in searc
 category: data-architecture        # data-architecture | data-engineering | ai-engineering
 tags: [lakehouse, medallion]
 image: /assets/images/posts/your-slug/main-diagram.jpg   # optional: card thumbnail + social preview
-featured: true                     # optional: show in "Start here" on the home page
 last_modified_at: 2026-11-01       # optional: shows "Updated …"
 ---
 ```

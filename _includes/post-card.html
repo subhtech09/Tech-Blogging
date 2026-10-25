@@ -1,6 +1,6 @@
 {%- comment -%}
-  Usage: {% include post-card.html post=post %}                — standard card
-         {% include post-card.html post=post featured=true %}  — large horizontal card
+  Usage: {% include post-card.html post=post %}            — standard card
+         {% include post-card.html post=post row=true %}   — horizontal card: image left; title, description, then details
   (Variables are prefixed with pc_ because Liquid `assign` is global.)
 {%- endcomment -%}
 {%- assign pc_post = include.post -%}
@@ -10,7 +10,7 @@
 {%- assign pc_minutes = pc_words | times: 1.0 | divided_by: site.words_per_minute | ceil | at_least: 1 -%}
 {%- assign pc_has_image = false -%}
 {%- if pc_post.image and pc_post.image != site.og_default_image -%}{%- assign pc_has_image = true -%}{%- endif -%}
-<article class="card post-card tone-{{ pc_topic.tone | default: 'green' }}{% if include.featured %} post-card--featured{% endif %}" data-topic="{{ pc_topic_key }}">
+<article class="card post-card tone-{{ pc_topic.tone | default: 'green' }}{% if include.row %} post-card--row{% endif %}" data-topic="{{ pc_topic_key }}">
   <div class="post-card-media{% unless pc_has_image %} post-card-media--placeholder{% endunless %}">
     {%- if pc_has_image %}
     <img src="{{ pc_post.image | relative_url }}" alt="" loading="lazy" decoding="async">
