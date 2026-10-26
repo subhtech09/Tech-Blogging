@@ -48,6 +48,23 @@
       .catch(function () { /* not on Static Web Apps, e.g. local preview */ });
   }
 
+  /* ---------- Home page: line the logo up with the hero headline -------- */
+  // The headline is shifted left in CSS; measuring keeps the logo aligned at
+  // every screen width. It never goes closer than 8px to the screen edge.
+  var brand = document.querySelector('.layout-home .brand');
+  var heroCopy = document.querySelector('.layout-home .hero-copy');
+  if (brand && heroCopy) {
+    var alignBrand = function () {
+      brand.style.transform = '';
+      var brandLeft = brand.getBoundingClientRect().left;
+      var shift = Math.max(heroCopy.getBoundingClientRect().left - brandLeft, 8 - brandLeft);
+      if (Math.abs(shift) >= 1) brand.style.transform = 'translateX(' + Math.round(shift) + 'px)';
+    };
+    alignBrand();
+    window.addEventListener('resize', alignBrand);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignBrand);
+  }
+
   /* ---------- Mobile navigation ----------------------------------------- */
   var navToggle = document.querySelector('.nav-toggle');
   if (navToggle) {
