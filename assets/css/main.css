@@ -1774,6 +1774,18 @@ mark { padding: 0 .1em; border-radius: 3px; background: var(--mark-bg); color: i
    zoom cancels the larger root font size there (1 / 1.0625). */
 html:has(> body.layout-home) { font-size: 106.25%; }
 .layout-home .hero { zoom: .9412; }
+/* Two-column hero: headline moved left and diagram moved right by 5% of the
+   screen width, never closer than 16px to the screen edge. The diagram is 5%
+   larger. Lengths are divided by the zoom above so they measure true screen
+   pixels. */
+@media (min-width: 960px) {
+  .layout-home .hero {
+    --hero-room: calc((100vw - min(100vw, var(--container))) / 2 + var(--gutter) - 16px);
+  }
+  .layout-home .hero-copy { position: relative; left: calc(-1 * min(5vw, var(--hero-room)) / .9412); }
+  .layout-home .hero-art { position: relative; left: calc(max(0px, min(5vw, var(--hero-room) - 28px)) / .9412); }
+  .layout-home .hero-diagram { width: 105%; max-width: 588px; }
+}
 .layout-home .post-card,
 .layout-home .topic-card {
   border: 1px solid var(--border);
