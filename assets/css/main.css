@@ -421,20 +421,22 @@ p { margin: 0; }
   .header-actions .icon-btn { width: 36px; }
 }
 
-.site-nav ul { display: flex; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.site-nav ul { display: flex; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .site-nav a {
   position: relative;
   display: block;
-  padding: 8px 12px;
+  padding: 7px 12px;
+  border: 1px solid var(--tip-border);   /* light-mint pills, same as the home page hero */
   border-radius: 8px;
+  background: var(--tip-bg);
   color: var(--header-text);
   font-size: .9375rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
-  transition: color .15s, background-color .15s;
+  transition: color .15s, background-color .15s, border-color .15s;
 }
-.site-nav a:hover { color: var(--header-text-strong); background: var(--header-hover-bg); }
+.site-nav a:hover { color: var(--header-text-strong); background: var(--chip-bg); border-color: var(--mint-300); }
 .site-nav a[aria-current="page"] { color: var(--header-text-strong); font-weight: 600; }
 .site-nav a[aria-current="page"]::after {
   content: "";
@@ -494,7 +496,7 @@ p { margin: 0; }
   .nav-open .site-nav { display: block; }
   .site-nav ul { flex-direction: column; gap: 2px; }
   .site-nav a { padding: 12px; font-size: 1rem; }
-  .site-nav a[aria-current="page"] { background: var(--header-hover-bg); }
+  .site-nav a[aria-current="page"] { background: var(--chip-bg); }
   .site-nav a[aria-current="page"]::after { left: 0; right: auto; top: 10px; bottom: 10px; width: 3px; height: auto; border-radius: 3px; }
 }
 
@@ -1772,7 +1774,6 @@ mark { padding: 0 .1em; border-radius: 3px; background: var(--mark-bg); color: i
 html:has(> body.layout-home) { font-size: 106.25%; }
 .layout-home .hero-copy,
 .layout-home .hero-art,
-.layout-home .cta-copy,
 .layout-home .post-card,
 .layout-home .topic-card {
   border: 1px solid var(--border);
@@ -1790,7 +1791,6 @@ html:has(> body.layout-home) { font-size: 106.25%; }
   .layout-home .hero-copy { display: flex; flex-direction: column; justify-content: center; }
   .layout-home .hero-art { display: flex; align-items: center; }
 }
-.layout-home .cta-copy { padding: 24px 28px; }
 .layout-home .section--recent > .container { max-width: calc(940px + var(--gutter) * 2); }
 
 /* 15. Utilities, motion, print --------------------------------------------- */
