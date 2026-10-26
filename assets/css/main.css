@@ -47,7 +47,7 @@
   --radius-lg: 16px;
   --container: 1200px;
   --gutter: 16px;
-  --header-h: 64px;
+  --header-h: 76px;
   --ease: cubic-bezier(.2, .7, .2, 1);
   --grad-accent: linear-gradient(90deg, var(--mint-400), var(--sky-400));
 
@@ -78,8 +78,10 @@
   --active-text: var(--ink-950);
   --chip-bg: var(--mint-100);
   --chip-text: var(--mint-800);
-  --header-bg: rgba(255, 255, 255, .84);
-  --header-border: #DCE7EA;
+  --header-bg: rgba(250, 244, 230, .94);   /* cream */
+  --header-border: #E6D9BC;
+  --cream-card: #F2E7CF;                   /* darker cream: home page cards */
+  --cream-card-border: #E2D2AE;
   --header-text: var(--ink-700);
   --header-text-strong: var(--ink-950);
   --header-hover-bg: rgba(19, 36, 51, .05);
@@ -144,8 +146,10 @@
     --active-text: var(--ink-950);
     --chip-bg: rgba(95, 203, 155, .16);
     --chip-text: #9FE5C2;
-    --header-bg: rgba(14, 22, 33, .84);
-    --header-border: #1E3042;
+    --header-bg: rgba(30, 27, 21, .94);
+    --header-border: #3A3326;
+    --cream-card: #231F18;
+    --cream-card-border: #3D3528;
     --header-text: #B7C6D3;
     --header-text-strong: #FFFFFF;
     --header-hover-bg: rgba(255, 255, 255, .06);
@@ -206,8 +210,10 @@
   --active-text: var(--ink-950);
   --chip-bg: rgba(95, 203, 155, .16);
   --chip-text: #9FE5C2;
-  --header-bg: rgba(14, 22, 33, .84);
-  --header-border: #1E3042;
+  --header-bg: rgba(30, 27, 21, .94);
+  --header-border: #3A3326;
+  --cream-card: #231F18;
+  --cream-card-border: #3D3528;
   --header-text: #B7C6D3;
   --header-text-strong: #FFFFFF;
   --header-hover-bg: rgba(255, 255, 255, .06);
@@ -406,14 +412,14 @@ p { margin: 0; }
   margin-right: auto;
   color: var(--header-text-strong);
   font-family: var(--font-display);
-  font-size: 1.0625rem;
+  font-size: 1.1875rem;
   font-weight: 800;
   letter-spacing: -.015em;
   text-decoration: none;
   white-space: nowrap;
 }
 .brand:hover { color: var(--header-text-strong); }
-.logo-mark { width: 30px; height: 30px; flex: none; }
+.logo-mark { width: 34px; height: 34px; flex: none; }
 @media (max-width: 479px) {
   .header-inner { gap: 8px; }
   .brand { min-width: 0; font-size: 1rem; }
@@ -1766,6 +1772,25 @@ mark { padding: 0 .1em; border-radius: 3px; background: var(--mark-bg); color: i
 .social-link:hover,
 .site-footer .social-link:hover { border-color: var(--btn-bg); background: var(--btn-bg); color: var(--btn-text); }
 .social-link .icon { width: 18px; height: 18px; }
+
+/* Home page: slightly larger text, text blocks in darker-cream cards, and a
+   narrower "Recent articles" list. */
+html:has(> body.layout-home) { font-size: 106.25%; }
+.layout-home .hero-copy,
+.layout-home .section-head,
+.layout-home .cta-copy,
+.layout-home .post-card,
+.layout-home .topic-card {
+  border: 1px solid var(--cream-card-border);
+  border-radius: var(--radius-lg);
+  background: var(--cream-card);
+  box-shadow: var(--shadow-sm);
+}
+.layout-home .hero-copy { padding: clamp(24px, 4vw, 40px); }
+.layout-home .section-head { align-items: center; padding: 18px 24px; }
+.layout-home .cta-copy { padding: 24px 28px; }
+.layout-home .post-card-media { border-color: var(--cream-card-border); }
+.layout-home .section--recent > .container { max-width: calc(940px + var(--gutter) * 2); }
 
 /* 15. Utilities, motion, print --------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
