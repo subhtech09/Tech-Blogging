@@ -328,7 +328,7 @@ p { margin: 0; }
 }
 .container--narrow { max-width: calc(780px + var(--gutter) * 2); }
 .container--article { max-width: calc(760px + var(--gutter) * 2); }
-.container--wide { max-width: calc(var(--container) + 50px); }   /* /write/ page */
+.container--wide { max-width: calc(min(var(--container) + 50px, 100vw) - 10vw); }   /* /write/ page: 10% of the screen narrower */
 
 .section { padding-block: 64px; }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--border); }
