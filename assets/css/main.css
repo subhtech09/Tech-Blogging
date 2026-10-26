@@ -1768,10 +1768,10 @@ mark { padding: 0 .1em; border-radius: 3px; background: var(--mark-bg); color: i
 .social-link .icon { width: 18px; height: 18px; }
 
 /* Home page: slightly larger text, text blocks in cards, and a narrower
-   "Recent articles" list. */
+   "Recent articles" list. The hero text and diagram sit in light-mint blocks. */
 html:has(> body.layout-home) { font-size: 106.25%; }
 .layout-home .hero-copy,
-.layout-home .section-head,
+.layout-home .hero-art,
 .layout-home .cta-copy,
 .layout-home .post-card,
 .layout-home .topic-card {
@@ -1780,8 +1780,16 @@ html:has(> body.layout-home) { font-size: 106.25%; }
   background: var(--surface);
   box-shadow: var(--shadow-sm);
 }
+.layout-home .hero-copy,
+.layout-home .hero-art { border-color: var(--tip-border); background: var(--tip-bg); }
 .layout-home .hero-copy { padding: clamp(24px, 4vw, 40px); }
-.layout-home .section-head { align-items: center; padding: 18px 24px; }
+.layout-home .hero-art { padding: clamp(16px, 2.5vw, 28px); }
+.layout-home .hero-diagram { max-width: none; }
+@media (min-width: 1024px) {
+  .layout-home .hero-inner { grid-template-columns: 1fr 1fr; gap: 32px; align-items: stretch; }
+  .layout-home .hero-copy { display: flex; flex-direction: column; justify-content: center; }
+  .layout-home .hero-art { display: flex; align-items: center; }
+}
 .layout-home .cta-copy { padding: 24px 28px; }
 .layout-home .section--recent > .container { max-width: calc(940px + var(--gutter) * 2); }
 
