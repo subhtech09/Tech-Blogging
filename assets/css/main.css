@@ -429,7 +429,7 @@ p { margin: 0; }
   border: 1px solid transparent;   /* light-mint block on hover only */
   border-radius: 8px;
   color: var(--header-text);
-  font-size: .9375rem;
+  font-size: .8125rem;
   font-weight: 500;
   text-decoration: none;
   white-space: nowrap;
