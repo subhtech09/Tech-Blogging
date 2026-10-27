@@ -1050,6 +1050,17 @@ p { margin: 0; }
 .author-card .author-card-role { margin-top: 0; color: var(--accent-text); font-size: .875rem; font-weight: 600; }
 .author-card-bio { margin: 10px 0 14px; font-size: .9375rem; }
 @media (max-width: 480px) { .author-card { flex-direction: column; } }
+/* About page: square photo with slightly rounded corners */
+.author-card--about { align-items: center; gap: 28px; margin-bottom: 32px; }
+.author-card--about .author-photo {
+  flex: none;
+  width: 168px; height: 168px;
+  margin: 0;
+  border-radius: 12px;
+  object-fit: cover;
+}
+.author-card--about .author-card-role { margin-bottom: 14px; }
+@media (max-width: 480px) { .author-card--about { align-items: flex-start; } }
 
 .comments {
   margin-top: 48px;
