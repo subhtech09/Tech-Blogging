@@ -1050,17 +1050,29 @@ p { margin: 0; }
 .author-card .author-card-role { margin-top: 0; color: var(--accent-text); font-size: .875rem; font-weight: 600; }
 .author-card-bio { margin: 10px 0 14px; font-size: .9375rem; }
 @media (max-width: 480px) { .author-card { flex-direction: column; } }
-/* About page: square photo with slightly rounded corners */
-.author-card--about { align-items: center; gap: 28px; margin-bottom: 32px; }
+/* About page: square photo with slightly rounded corners. Text is sized from
+   the photo: the eyebrow is 20% of its height and lines up with its top edge;
+   name and role are 15% each and line up with its bottom edge. */
+.author-card--about { --photo: 168px; align-items: stretch; gap: 28px; margin-bottom: 32px; }
 .author-card--about .author-photo {
   flex: none;
-  width: 168px; height: 168px;
+  width: var(--photo); height: var(--photo);
   margin: 0;
   border-radius: 12px;
   object-fit: cover;
 }
-.author-card--about .author-card-role { margin-bottom: 14px; }
-@media (max-width: 480px) { .author-card--about { align-items: flex-start; } }
+.author-card--about .author-card-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.author-card--about .author-card-body > * { margin: 0; }
+.author-card--about .author-card-name { margin-top: auto; padding-top: 12px; }   /* name + role sit on the photo's bottom edge */
+.author-card--about .author-card-eyebrow { font-size: calc(var(--photo) * .2); line-height: 1; }
+.author-card--about .author-card-name,
+.author-card--about .author-card-role { font-size: calc(var(--photo) * .15); line-height: 1.2; }
+.author-card--about .author-card-role { margin-top: 10px; }
+@media (max-width: 720px) { .author-card--about { --photo: 120px; } }
 
 .comments {
   margin-top: 48px;
@@ -1825,7 +1837,7 @@ html:has(> body.layout-home) { font-size: 106.25%; }
   .layout-home .hero-copy { position: relative; left: calc(-1 * min(5vw, var(--hero-room)) / .9412); }
   /* The diagram's earlier 5% move right, then 5% back left. */
   .layout-home .hero-art { position: relative; left: calc((max(0px, min(5vw, var(--hero-room) - 28px)) - 5vw) / .9412); }
-  .layout-home .hero-diagram { width: 115.76%; max-width: 648px; }
+  .layout-home .hero-diagram { width: 127.34%; max-width: 713px; }
 }
 .layout-home .post-card,
 .layout-home .topic-card {
