@@ -10,7 +10,7 @@ Live URL: **https://theintelligencestack.tech/** (the Static Web App address htt
 - Click-to-enlarge diagram viewer (fit to screen, actual size, drag to pan)
 - Reading progress bar, code copy buttons, heading links
 - Comments on every article (Azure Cosmos DB, moderated) and per-article view counts (GoatCounter)
-- Topic pages, tags, client-side full-text search, RSS feed, sitemap, SEO and social cards
+- Topic pages, tags, client-side full-text search, sitemap, SEO and social cards
 - No build step on your side — GitHub Actions builds and deploys the site on every push
 
 ---
@@ -36,7 +36,13 @@ site is live.
 
 ### Option A — in the browser (`/write/`)
 
-Sign in as admin (the pen icon appears in the header) and open **`/write/`**.
+Sign in as admin, open the **Admin Corner** (the shield icon in the header or the **Admin Corner** button on the home page, or
+**`/admin/`**) and choose **Write article**, or go straight to **`/write/`**.
+
+The Admin Corner also lists every published article with a checkbox: tick
+articles and choose **Delete article** to remove them, with their image folders,
+from GitHub in one commit. A draft that published a deleted article becomes a
+plain draft again.
 
 - Fill in the title, description, topic and tags, then write in the editor:
   Heading 2–4, bold, italic, underline, strikethrough, highlight, theme text
@@ -202,9 +208,10 @@ Comments are stored in **Azure Cosmos DB** and served by the small API in
 - **Readers don't sign in.** They give a name, an optional email (never shown)
   and the comment. **Cloudflare Turnstile**, a hidden honeypot field and a rate
   limit (3 comments per visitor per 10 minutes) keep bots out.
-- **Moderation:** new comments wait as `pending` until you approve them at
-  **`/moderate/`**. Only users with the Static Web Apps role `admin` can open
-  that page or call `/api/manage/*`.
+- **Moderation:** new comments wait as `pending` until you approve them in the
+  **Admin Corner** (`/admin/`): tick comments and choose Approve, Reject or
+  Delete. Only users with the Static Web Apps role `admin` can open that page
+  or call `/api/manage/*`.
 - **Keyed by slug:** each comment stores the post's slug (from its file name),
   so renaming the domain keeps comments attached. To keep comments when you
   rename a post file, set `comments_id: <old-slug>` in its front matter.
@@ -264,7 +271,7 @@ renaming a post's file (or moving to a custom domain) starts its count afresh.
 | GitHub Pages limitation | How the site handles it |
 |---|---|
 | Static files only, no server code | Everything is pre-rendered HTML; search, filters and the diagram viewer run in the browser |
-| Only [whitelisted plugins](https://pages.github.com/versions/) | Uses only `jekyll-feed`, `jekyll-seo-tag` and `jekyll-sitemap`; topic and tag pages use plain Liquid |
+| Only [whitelisted plugins](https://pages.github.com/versions/) | Uses only `jekyll-seo-tag` and `jekyll-sitemap`; topic and tag pages use plain Liquid |
 | No database | Search reads `search.json`, which is generated at build time |
 | No comment backend or database for counters | View counts via GoatCounter; comments need the Azure Static Web Apps API (section 7) |
 | 1 GB site size, 100 GB/month soft bandwidth | Plain CSS/JS with no frameworks; keep diagrams under ~500 KB |
@@ -285,12 +292,12 @@ assets/css/main.css    All styles (light + dark theme)
 assets/js/main.js      Theme toggle, TOC, diagram viewer, code copy, filters
 assets/js/search.js    Client-side search
 assets/js/comments.js  Article comments (load, post)
-assets/js/moderate.js  Comment moderation page
+assets/js/admin.js     Admin Corner (moderate comments, delete articles)
 assets/js/write.js     Article editor page (drafts, image paste, publish)
 assets/js/editor.bundle.js  Editor library, built from tools/editor/
 api/                   Azure Functions comments API (Cosmos DB)
 staticwebapp.config.json  Azure Static Web Apps routes and admin-only pages
-moderate.html          Comment moderation page (/moderate/, admin only)
+admin.html             Admin Corner (/admin/, admin only)
 write.html             Article editor (/write/, admin only)
 assets/images/posts/   One folder of diagrams per article
 blog/  topics/         Article listing and topic pages

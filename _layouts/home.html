@@ -11,6 +11,7 @@ layout: default
       <p class="hero-lede">{{ home_hero.lede | default: site.description }}</p>
       <div class="hero-actions">
         <a class="btn btn-primary" href="{{ '/blog/' | relative_url }}">Read the articles {% include icon.html name="arrow-right" %}</a>
+        <a class="btn btn-outline" href="{{ '/admin/' | relative_url }}" data-admin-only hidden>{% include icon.html name="shield" %} Admin Corner</a>
       </div>
       {%- assign home_latest = site.posts.first -%}
       {%- if home_latest %}
@@ -66,10 +67,9 @@ layout: default
     <div class="cta-band band">
       <div class="cta-copy">
         <h2>Never miss a new chapter</h2>
-        <p>Subscribe with any feed reader to get new articles as soon as they are published.</p>
+        <p>Follow along to hear about new articles as soon as they are published.</p>
       </div>
       <div class="cta-actions">
-        <a class="btn btn-primary" href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %} Subscribe via RSS</a>
         {%- if home_author.links.linkedin and home_author.links.linkedin != "" %}
         <a class="btn btn-secondary" href="{{ home_author.links.linkedin }}">{% include icon.html name="linkedin" %} Follow on LinkedIn</a>
         {%- elsif home_author.links.github and home_author.links.github != "" %}

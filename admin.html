@@ -1,0 +1,68 @@
+---
+layout: page
+title: Admin Corner
+eyebrow: Admin
+description: Moderate reader comments and manage articles. Only signed-in admins can open this page.
+permalink: /admin/
+prose: false
+sitemap: false
+noindex: true
+scripts:
+  - /assets/js/admin.js
+---
+{%- comment -%}
+  Admin Corner. Static Web Apps only serves this page and /api/manage/* to
+  users with the "admin" role (see staticwebapp.config.json). The article
+  list is the site's own posts at build time.
+{%- endcomment -%}
+<div class="admin" data-admin data-api="{{ site.comments.api | default: '/api' }}">
+  <div class="admin-signout">
+    <a class="btn btn-outline" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
+  </div>
+
+  <section class="admin-section" aria-labelledby="admin-comments-title" data-panel="comments">
+    <div class="admin-section-head">
+      <h2 id="admin-comments-title" class="admin-section-title">Moderate comments</h2>
+      <div class="admin-actions">
+        <button class="btn btn-primary" type="button" data-action="approved" disabled>Approve</button>
+        <button class="btn btn-secondary" type="button" data-action="rejected" disabled>Reject</button>
+        <button class="btn btn-outline" type="button" data-action="delete" disabled>Delete</button>
+      </div>
+    </div>
+    <label class="admin-select-all" hidden><input type="checkbox" data-select-all> Select all</label>
+    <p class="admin-status" data-status role="status" aria-live="polite">Loading comments…</p>
+    <ol class="admin-list" data-list></ol>
+  </section>
+
+  <section class="admin-section" aria-labelledby="admin-articles-title" data-panel="articles">
+    <div class="admin-section-head">
+      <h2 id="admin-articles-title" class="admin-section-title">Manage articles</h2>
+      <div class="admin-actions">
+        <a class="btn btn-primary" href="{{ '/write/' | relative_url }}">{% include icon.html name="pen" %}Write article</a>
+        <button class="btn btn-outline" type="button" data-action="delete" disabled>Delete article</button>
+      </div>
+    </div>
+    {%- if site.posts.size > 0 %}
+    <label class="admin-select-all"><input type="checkbox" data-select-all> Select all</label>
+    {%- endif %}
+    <p class="admin-status" data-status role="status" aria-live="polite">{% if site.posts.size == 0 %}No published articles.{% endif %}</p>
+    <ol class="admin-list admin-list--compact" data-list>
+      {%- for post in site.posts %}
+      <li class="admin-item admin-item--compact">
+        <label class="admin-check">
+          <input type="checkbox" value="{{ post.path | escape }}" data-title="{{ post.title | escape }}">
+          <span class="admin-item-title">{{ post.title | escape }}</span>
+        </label>
+        <a class="admin-view" href="{{ post.url | relative_url }}">View</a>
+      </li>
+      {%- endfor %}
+    </ol>
+  </section>
+</div>
+<script type="application/json" id="admin-posts">
+{
+{%- for post in site.posts %}
+  {{ post.comments_id | default: post.slug | jsonify }}: { "title": {{ post.title | jsonify }}, "url": {{ post.url | relative_url | jsonify }} }{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+}
+</script>

@@ -1,0 +1,5 @@
+url: "http://localhost:4280"
+comments:
+  enabled: true
+  api: /api
+  turnstile_site_key: "0x4AAAAAAFirE63NmkQBjTk__ra7qkSexSg"   # Cloudflare test key, always passes

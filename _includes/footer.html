@@ -26,13 +26,12 @@
         <li><a href="{{ '/tags/' | relative_url }}">Tags</a></li>
         <li><a href="{{ '/search/' | relative_url }}">Search</a></li>
         <li><a href="{{ '/about/' | relative_url }}">About</a></li>
-        <li><a href="{{ '/feed.xml' | relative_url }}">RSS feed</a></li>
       </ul>
     </div>
   </div>
 
   <div class="container footer-bottom">
-    <p>&copy; {{ site.time | date: '%Y' }} {{ site_author.name | default: site.title }}. All rights reserved.</p>
+    <p>&copy; {{ site.time | date: '%Y' }} {{ site_author.name | default: site.title }}. All rights reserved. <span class="footer-signin" data-admin-signin>&middot; <a href="/.auth/login/github?post_login_redirect_uri=/" rel="nofollow">Admin sign-in</a></span></p>
     <p>Built with Jekyll &middot; Hosted on GitHub Pages</p>
   </div>
 </footer>

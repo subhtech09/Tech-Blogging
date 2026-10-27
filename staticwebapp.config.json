@@ -1,12 +1,44 @@
 {
   "routes": [
-    { "route": "/moderate*", "allowedRoles": ["admin"] },
-    { "route": "/write*", "allowedRoles": ["admin"] },
-    { "route": "/api/manage/*", "allowedRoles": ["admin"] }
+    {
+      "route": "/admin",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/admin/*",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/moderate*",
+      "redirect": "/admin/",
+      "statusCode": 301
+    },
+    {
+      "route": "/write",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/write/*",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/api/manage/*",
+      "allowedRoles": [
+        "admin"
+      ]
+    }
   ],
   "responseOverrides": {
     "401": {
-      "redirect": "/.auth/login/github?post_login_redirect_uri=/moderate/",
+      "redirect": "/.auth/login/github?post_login_redirect_uri=/admin/",
       "statusCode": 302
     },
     "404": {

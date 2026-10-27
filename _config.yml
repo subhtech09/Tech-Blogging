@@ -59,18 +59,15 @@ kramdown:
 #  Plugins — only GitHub Pages–whitelisted plugins are used
 # =============================================================================
 plugins:
-  - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
-
-feed:
-  path: feed.xml
 
 # =============================================================================
 #  Article comments, stored in Azure Cosmos DB through the site's own /api
 #  functions (needs Azure Static Web Apps hosting — see README.md, section 7).
-#  Readers don't sign in; Cloudflare Turnstile and a moderation queue at
-#  /moderate/ keep spam out. Comments appear once turnstile_site_key is set.
+#  Readers don't sign in; Cloudflare Turnstile and a moderation queue in the
+#  Admin corner (/admin/) keep spam out. Comments appear once
+#  turnstile_site_key is set.
 # =============================================================================
 comments:
   enabled: true

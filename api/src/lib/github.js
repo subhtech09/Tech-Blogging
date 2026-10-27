@@ -37,7 +37,7 @@ async function gh(method, path, body) {
 async function listFolder(path) {
   try {
     const items = await gh('GET', `/repos/${repo()}/contents/${path}?ref=${encodeURIComponent(branch())}`);
-    return Array.isArray(items) ? items.map((i) => i.name) : [];
+    return Array.isArray(items) ? items.filter((i) => i.type === 'file').map((i) => i.name) : [];
   } catch (err) {
     if (err.status === 404) return [];
     throw err;

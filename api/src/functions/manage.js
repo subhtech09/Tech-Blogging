@@ -1,4 +1,4 @@
-/* Moderation endpoints, used by the /moderate/ page. Admin only: Static Web
+/* Moderation endpoints, used by the Admin Corner (/admin/). Admin only: Static Web
    Apps blocks other callers via staticwebapp.config.json, and each handler
    checks the role again.
      GET    /api/manage/comments?status=pending|approved|rejected
