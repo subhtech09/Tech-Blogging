@@ -1,0 +1,160 @@
+{%- comment -%}
+  Article editor, shared by /write/ (mode="write": drafts list, new and
+  delete) and /edit/ (mode="edit": one published article, opened from the
+  Admin Corner). Static Web Apps only serves these pages and /api/manage/*
+  to users with the "admin" role (see staticwebapp.config.json). Drafts are
+  saved to Cosmos DB; Publish commits the post and its images to GitHub, and
+  the normal deploy workflow puts it live.
+{%- endcomment -%}
+<div class="write" data-write data-mode="{{ include.mode | default: 'write' }}" data-api="{{ site.comments.api | default: '/api' }}">
+  {%- if include.mode == "edit" %}
+  <div class="admin-signout write-topbar">
+    <a class="btn btn-outline" href="{{ '/admin/' | relative_url }}">Back to Admin Corner</a>
+    <a class="btn btn-outline" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
+  </div>
+  {%- else %}
+  <section class="write-drafts" aria-labelledby="write-drafts-title">
+    <h2 id="write-drafts-title" class="write-drafts-title"><label for="write-draft-select">Drafts</label></h2>
+    <select class="field-input write-drafts-select" id="write-draft-select" data-drafts-list>
+      <option value="">----- Select an article to edit -------</option>
+    </select>
+    <button class="btn btn-secondary" type="button" data-action="new">New article</button>
+    <a class="btn btn-outline" href="/.auth/logout?post_logout_redirect_uri=/">Sign out</a>
+    <p class="write-drafts-status" data-drafts-status role="status" aria-live="polite">Loading drafts…</p>
+  </section>
+  {%- endif %}
+
+  <div class="write-main">
+    <form class="write-meta" data-write-form novalidate>
+      <div class="field">
+        <label for="write-title">Title</label>
+        <input class="field-input write-title" id="write-title" name="title" type="text" maxlength="150" required>
+      </div>
+      <div class="field">
+        <label for="write-description">Description <span class="field-hint">shown under the title, on cards and in search</span></label>
+        <textarea class="field-input" id="write-description" name="description" rows="2" maxlength="300" required></textarea>
+      </div>
+      <div class="write-meta-row">
+        <div class="field">
+          <label for="write-category">Topic</label>
+          <select class="field-input" id="write-category" name="category" required>
+            {%- for topic in site.data.topics %}
+            <option value="{{ topic[0] }}">{{ topic[1].name }}</option>
+            {%- endfor %}
+          </select>
+        </div>
+        <div class="field">
+          <label for="write-tags">Tags <span class="field-hint">comma-separated</span></label>
+          <input class="field-input" id="write-tags" name="tags" type="text" placeholder="lakehouse, spark">
+        </div>
+      </div>
+      <div class="write-meta-row">
+        <div class="field">
+          <label for="write-slug">URL slug <span class="field-hint" data-slug-hint></span></label>
+          <input class="field-input" id="write-slug" name="slug" type="text" maxlength="80" pattern="[a-z0-9-]+" spellcheck="false">
+        </div>
+        <label class="write-check">
+          <input type="checkbox" name="useCover" checked>
+          Use the first image as the card and social-preview image
+        </label>
+      </div>
+    </form>
+
+    <div class="editor-toolbar" data-toolbar role="toolbar" aria-label="Formatting">
+      <div class="tb-group">
+        <select class="tb-select" data-block aria-label="Text style" title="Text style">
+          <option value="paragraph">Normal text</option>
+          <option value="2">Heading 2</option>
+          <option value="3">Heading 3</option>
+          <option value="4">Heading 4</option>
+        </select>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" type="button" data-cmd="bold" aria-label="Bold (Ctrl+B)" title="Bold (Ctrl+B)"><strong>B</strong></button>
+        <button class="tb-btn" type="button" data-cmd="italic" aria-label="Italic (Ctrl+I)" title="Italic (Ctrl+I)"><em>I</em></button>
+        <button class="tb-btn" type="button" data-cmd="underline" aria-label="Underline (Ctrl+U)" title="Underline (Ctrl+U)"><u>U</u></button>
+        <button class="tb-btn" type="button" data-cmd="strike" aria-label="Strikethrough" title="Strikethrough"><s>S</s></button>
+        <button class="tb-btn" type="button" data-cmd="highlight" aria-label="Highlight" title="Highlight"><mark>H</mark></button>
+        <select class="tb-select" data-color aria-label="Text colour" title="Text colour">
+          <option value="">Colour</option>
+          <option value="mint">Mint</option>
+          <option value="sky">Sky</option>
+          <option value="teal">Teal</option>
+          <option value="warn">Amber</option>
+        </select>
+        <button class="tb-btn" type="button" data-cmd="code" aria-label="Inline code" title="Inline code"><code>&lt;/&gt;</code></button>
+        <button class="tb-btn" type="button" data-cmd="link" aria-label="Link (Ctrl+K)" title="Link (Ctrl+K)">{% include icon.html name="link" %}</button>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" type="button" data-cmd="bulletList" aria-label="Bulleted list" title="Bulleted list">{% include icon.html name="list-bullet" %}</button>
+        <button class="tb-btn" type="button" data-cmd="orderedList" aria-label="Numbered list" title="Numbered list">{% include icon.html name="list-number" %}</button>
+        <button class="tb-btn" type="button" data-cmd="blockquote" aria-label="Quote" title="Quote">{% include icon.html name="quote" %}</button>
+        <select class="tb-select" data-callout aria-label="Callout box" title="Callout box">
+          <option value="">Callout</option>
+          <option value="note">Note box</option>
+          <option value="tip">Tip box</option>
+          <option value="warning">Watch out box</option>
+        </select>
+        <button class="tb-btn" type="button" data-cmd="codeBlock" aria-label="Code block" title="Code block">{% include icon.html name="code-block" %}</button>
+        <select class="tb-select" data-language aria-label="Code language" title="Code language" hidden>
+          <option value="">Plain text</option>
+          <option value="python">Python</option>
+          <option value="sql">SQL</option>
+          <option value="bash">Bash</option>
+          <option value="powershell">PowerShell</option>
+          <option value="javascript">JavaScript</option>
+          <option value="typescript">TypeScript</option>
+          <option value="json">JSON</option>
+          <option value="yaml">YAML</option>
+          <option value="scala">Scala</option>
+          <option value="java">Java</option>
+          <option value="csharp">C#</option>
+          <option value="go">Go</option>
+          <option value="hcl">Terraform (HCL)</option>
+          <option value="dockerfile">Dockerfile</option>
+        </select>
+        <button class="tb-btn" type="button" data-cmd="horizontalRule" aria-label="Divider" title="Divider">{% include icon.html name="divider" %}</button>
+        <button class="tb-btn" type="button" data-cmd="table" aria-label="Insert table" title="Insert table">{% include icon.html name="table" %}</button>
+      </div>
+      <div class="tb-group">
+        <button class="tb-btn" type="button" data-cmd="undo" aria-label="Undo (Ctrl+Z)" title="Undo (Ctrl+Z)">{% include icon.html name="undo" %}</button>
+        <button class="tb-btn" type="button" data-cmd="redo" aria-label="Redo (Ctrl+Shift+Z)" title="Redo (Ctrl+Shift+Z)">{% include icon.html name="redo" %}</button>
+      </div>
+      <div class="tb-group" data-table-tools hidden>
+        <button class="tb-btn" type="button" data-cmd="addRowAfter" title="Add row below">+ Row</button>
+        <button class="tb-btn" type="button" data-cmd="addColumnAfter" title="Add column to the right">+ Col</button>
+        <button class="tb-btn" type="button" data-cmd="deleteRow" title="Delete row">− Row</button>
+        <button class="tb-btn" type="button" data-cmd="deleteColumn" title="Delete column">− Col</button>
+        <button class="tb-btn" type="button" data-cmd="deleteTable" title="Delete table">Delete table</button>
+      </div>
+      <div class="tb-group" data-image-tools hidden>
+        <button class="tb-btn" type="button" data-cmd="caption" title="Edit the image caption">Caption</button>
+        <button class="tb-btn" type="button" data-cmd="alt" title="Describe the image for screen readers">Alt text</button>
+        <button class="tb-btn" type="button" data-cmd="removeImage" title="Remove the image">Remove image</button>
+      </div>
+    </div>
+
+    <div class="editor-frame" data-editor-frame>
+      <div data-editor></div>
+    </div>
+    <p class="write-paste-hint">Paste or drag images straight into the text. Large images are resized automatically.</p>
+
+    <div class="write-preview" data-preview hidden>
+      <div class="post">
+        <h1 class="post-title" data-preview-title></h1>
+        <p class="post-lede" data-preview-description></p>
+      </div>
+      <div class="prose" data-preview-body></div>
+    </div>
+
+    <div class="write-actions">
+      <button class="btn btn-secondary" type="button" data-action="save">Save draft</button>
+      <button class="btn btn-outline" type="button" data-action="preview" aria-pressed="false">Preview</button>
+      <button class="btn btn-primary" type="button" data-action="publish">Publish</button>
+      {%- unless include.mode == "edit" %}
+      <button class="btn btn-outline write-delete" type="button" data-action="delete">Delete draft</button>
+      {%- endunless %}
+    </div>
+    <p class="write-status" data-write-status role="status" aria-live="polite"></p>
+  </div>
+</div>

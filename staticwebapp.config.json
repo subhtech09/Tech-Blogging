@@ -30,6 +30,18 @@
       ]
     },
     {
+      "route": "/edit",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
+      "route": "/edit/*",
+      "allowedRoles": [
+        "admin"
+      ]
+    },
+    {
       "route": "/api/manage/*",
       "allowedRoles": [
         "admin"

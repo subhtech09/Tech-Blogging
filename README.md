@@ -39,10 +39,16 @@ site is live.
 Sign in as admin, open the **Admin Corner** (the shield icon in the header or the **Admin Corner** button on the home page, or
 **`/admin/`**) and choose **Write article**, or go straight to **`/write/`**.
 
-The Admin Corner also lists every published article with a checkbox: tick
-articles and choose **Delete article** to remove them, with their image folders,
-from GitHub in one commit. A draft that published a deleted article becomes a
-plain draft again.
+The Admin Corner also lists every published article with a checkbox:
+
+- Tick **one** article and choose **Edit article** to open it in the editor at
+  `/edit/` (the same editor, without the drafts list). **Save draft** keeps
+  your changes without publishing; **Update published article** puts them
+  live. Only articles published from the editor can be edited this way;
+  hand-written posts are edited in their Markdown file.
+- Tick articles and choose **Delete article** to remove them, with their image
+  folders, from GitHub in one commit. A draft that published a deleted article
+  becomes a plain draft again.
 
 - Fill in the title, description, topic and tags, then write in the editor:
   Heading 2–4, bold, italic, underline, strikethrough, highlight, theme text
@@ -51,7 +57,9 @@ plain draft again.
   images, files, or content copied from a web page). Big images are resized
   in the browser before upload. Select an image to add a caption or alt text.
 - **Save draft** (or Ctrl+S) stores the draft in Cosmos DB and its images in
-  Blob Storage. Drafts are listed on the left; nothing is public yet.
+  Blob Storage. Unpublished drafts are listed in the **Drafts** dropdown at the
+  top; nothing is public yet. Once published, an article leaves that list and
+  is edited from the Admin Corner.
 - **Publish** commits the post to `_posts/` and its images to
   `assets/images/posts/<slug>/` in one commit; the deploy workflow puts it live
   in about 3 minutes. Publishing the same draft again updates the article (the
@@ -292,13 +300,15 @@ assets/css/main.css    All styles (light + dark theme)
 assets/js/main.js      Theme toggle, TOC, diagram viewer, code copy, filters
 assets/js/search.js    Client-side search
 assets/js/comments.js  Article comments (load, post)
-assets/js/admin.js     Admin Corner (moderate comments, delete articles)
-assets/js/write.js     Article editor page (drafts, image paste, publish)
+assets/js/admin.js     Admin Corner (moderate comments, edit and delete articles)
+assets/js/write.js     Article editor (/write/ and /edit/: drafts, image paste, publish)
 assets/js/editor.bundle.js  Editor library, built from tools/editor/
 api/                   Azure Functions comments API (Cosmos DB)
 staticwebapp.config.json  Azure Static Web Apps routes and admin-only pages
 admin.html             Admin Corner (/admin/, admin only)
 write.html             Article editor (/write/, admin only)
+edit.html              Edit a published article (/edit/, admin only)
+_includes/article-editor.html  Editor markup shared by write.html and edit.html
 assets/images/posts/   One folder of diagrams per article
 blog/  topics/         Article listing and topic pages
 tags.html search.html  Tag index and search page

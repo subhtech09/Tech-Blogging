@@ -109,7 +109,8 @@ function draftSummary(d) {
     title: d.title,
     status: d.status,
     updatedAt: d.updatedAt,
-    url: d.url || null
+    url: d.url || null,
+    publishedPath: d.publishedPath || null
   };
 }
 
@@ -118,7 +119,7 @@ async function listDrafts(request, context) {
   if (denied) return denied;
   try {
     const { resources } = await draftsContainer()
-      .items.query('SELECT c.id, c.title, c.status, c.updatedAt, c.url FROM c ORDER BY c.updatedAt DESC OFFSET 0 LIMIT 200')
+      .items.query('SELECT c.id, c.title, c.status, c.updatedAt, c.url, c.publishedPath FROM c ORDER BY c.updatedAt DESC OFFSET 0 LIMIT 200')
       .fetchAll();
     return json(200, { drafts: resources.map(draftSummary) });
   } catch (err) {

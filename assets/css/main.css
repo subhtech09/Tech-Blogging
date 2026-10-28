@@ -1152,6 +1152,7 @@ textarea.field-input { min-height: 120px; resize: vertical; line-height: 1.6; }
 .admin { display: grid; gap: 28px; max-width: 900px; }
 .admin-signout { display: flex; justify-content: flex-end; }
 .admin-signout .btn { padding: 8px 16px; font-size: .875rem; }
+.write-topbar { flex-wrap: wrap; gap: 10px; }   /* edit page: Back to Admin Corner + Sign out */
 .admin-section {
   padding: 24px clamp(16px, 3vw, 28px);
   border: 1px solid var(--border);

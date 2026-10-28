@@ -1,8 +1,9 @@
 /* ==========================================================================
-   Article editor (/write/) — admin only
+   Article editor (/write/ and /edit/) — admin only
    Drafts are saved to /api/manage/drafts; images pasted or dropped into the
    text are resized here and uploaded straight away; Publish commits the post
-   to GitHub, and the deploy workflow puts it live.
+   to GitHub, and the deploy workflow puts it live. /edit/?draft={id} opens one
+   published article (chosen in the Admin Corner) without the drafts list.
    ========================================================================== */
 (function () {
   'use strict';
@@ -11,6 +12,7 @@
   if (!root || !window.BlogEditor || !window.fetch) return;
 
   var api = root.getAttribute('data-api').replace(/\/$/, '') + '/manage/drafts';
+  var editMode = root.getAttribute('data-mode') === 'edit';
   var form = root.querySelector('[data-write-form]');
   var toolbar = root.querySelector('[data-toolbar]');
   var frame = root.querySelector('[data-editor-frame]');
@@ -450,7 +452,8 @@
       highlightCurrent();
     }).catch(function (err) {
       say(err.message);
-      if (!state.id) newDraft();
+      if (state.id) return;
+      if (editMode) noArticle(err.message); else newDraft();
     });
   }
 
@@ -466,20 +469,34 @@
     });
   }
 
+  // Edit page without a loadable article: nothing to save or publish.
+  function noArticle(message) {
+    busy(true);
+    form.querySelectorAll('input, textarea, select').forEach(function (f) { f.disabled = true; });
+    editor.setEditable(false, false);
+    toolbar.hidden = true;
+    state.dirty = false;
+    say(message + ' Choose an article to edit in the Admin Corner.');
+  }
+
   // Shows the open draft in the dropdown, or the placeholder for a new article.
   function highlightCurrent() {
+    if (!draftsList) return;
     var listed = Array.prototype.some.call(draftsList.options, function (o) { return o.value === state.id; });
     draftsList.value = listed ? state.id : '';
   }
 
+  // Lists unpublished drafts only; published articles are edited from the
+  // Admin Corner. The edit page has no list.
   function refreshList() {
+    if (!draftsList) return Promise.resolve();
     return request(api).then(function (data) {
-      var drafts = data.drafts || [];
+      var drafts = (data.drafts || []).filter(function (d) { return d.status !== 'published'; });
       draftsList.length = 1;   // keep the "Select an article" placeholder
       drafts.forEach(function (d) {
         var option = document.createElement('option');
         option.value = d.id;
-        option.textContent = (d.title || 'Untitled') + ' — ' + (d.status === 'published' ? 'Published' : 'Draft') +
+        option.textContent = (d.title || 'Untitled') + ' — Draft' +
           (d.updatedAt ? ', ' + dateFmt.format(new Date(d.updatedAt)) : '');
         draftsList.appendChild(option);
       });
@@ -489,7 +506,7 @@
     }).catch(function (err) { draftsStatus.textContent = err.message; });
   }
 
-  draftsList.addEventListener('change', function () {
+  if (draftsList) draftsList.addEventListener('change', function () {
     var id = draftsList.value;
     if (!id || id === state.id) return highlightCurrent();
     if (confirmDiscard()) loadDraft(id);
@@ -498,7 +515,7 @@
 
   function busy(on) {
     state.busy = on;
-    ['save', 'publish', 'delete', 'new'].forEach(function (n) { btn(n).disabled = on; });
+    ['save', 'publish', 'delete', 'new'].forEach(function (n) { if (btn(n)) btn(n).disabled = on; });
   }
 
   function uploadsPending() {
@@ -549,7 +566,7 @@
     }).catch(function (err) { say(err.message); }).then(function () { busy(false); });
   });
 
-  btn('delete').addEventListener('click', function () {
+  if (btn('delete')) btn('delete').addEventListener('click', function () {
     if (state.busy) return;
     var published = state.draft && state.draft.status === 'published';
     var question = published
@@ -565,7 +582,7 @@
     }).catch(function (err) { say(err.message); }).then(function () { busy(false); });
   });
 
-  btn('new').addEventListener('click', function () {
+  if (btn('new')) btn('new').addEventListener('click', function () {
     if (confirmDiscard()) newDraft();
   });
 
@@ -592,6 +609,8 @@
   /* ---------- Start ----------------------------------------------------- */
   var initial = new URLSearchParams(window.location.search).get('draft');
   refreshList();
-  if (initial) loadDraft(initial); else newDraft();
+  if (initial) loadDraft(initial);
+  else if (editMode) noArticle('No article selected.');
+  else newDraft();
   updateToolbar();
 })();

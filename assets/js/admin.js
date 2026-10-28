@@ -1,7 +1,8 @@
 /* ==========================================================================
    Admin Corner (/admin/) — admin only
    Moderate comments: approve, reject or delete the checked pending comments.
-   Manage articles: delete the checked published articles.
+   Manage articles: edit the checked article (one at a time) or delete the
+   checked published articles.
    ========================================================================== */
 (function () {
   'use strict';
@@ -172,33 +173,68 @@
 
   /* ---------- Manage articles ------------------------------------------- */
   var articles = new Panel('articles');
+  var editButton = root.querySelector('[data-panel="articles"] button[data-action="edit"]');
+  var deleteButton = root.querySelector('[data-panel="articles"] button[data-action="delete"]');
 
-  articles.buttons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      var boxes = articles.checked();
-      if (!boxes.length) return;
-      var titles = boxes.map(function (b) { return '• ' + b.getAttribute('data-title'); }).join('\n');
-      if (!window.confirm('Delete ' + plural(boxes.length, 'article') + ' from the site?\n\n' + titles +
-        '\n\nThe posts and their images are removed from GitHub. This cannot be undone here.')) return;
-
-      articles.setBusy(true);
-      articles.status.textContent = 'Deleting…';
-      request(api + '/articles/delete', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ paths: boxes.map(function (b) { return b.value; }) })
-      }).then(function (res) {
-        var gone = (res.deleted || []).concat(res.missing || []);
-        boxes.forEach(function (b) { if (gone.indexOf(b.value) !== -1) b.closest('li').remove(); });
-        var msg = plural((res.deleted || []).length, 'article') + ' deleted. The site updates in about 3 minutes, once the deploy finishes.';
-        if (res.missing && res.missing.length) msg += ' ' + plural(res.missing.length, 'article') + ' had already been removed.';
-        if (res.warning) msg += ' ' + res.warning;
-        if (!articles.boxes().length) msg += ' No published articles left.';
-        articles.status.textContent = msg;
-      }).catch(function (err) {
-        articles.status.textContent = err.message;
-      }).then(function () { articles.setBusy(false); });
+  // Published path -> editor draft id. Only articles published from the
+  // article editor have one; hand-written posts can't be edited here.
+  var editable = null;
+  var editableLoad = request(api + '/drafts', { headers: { Accept: 'application/json' } }).then(function (data) {
+    editable = {};
+    (data.drafts || []).forEach(function (d) {
+      if (d.status === 'published' && d.publishedPath) editable[d.publishedPath] = d.id;
     });
+  }).catch(function (err) { editableLoad.error = err.message; });
+
+  editButton.addEventListener('click', function () {
+    var boxes = articles.checked();
+    if (!boxes.length) return;
+    if (boxes.length > 1) {
+      window.alert('Select only one article to edit. ' + plural(boxes.length, 'article') + ' are selected.');
+      return;
+    }
+    var box = boxes[0];
+    articles.status.textContent = 'Opening…';
+    editableLoad.then(function () {
+      if (!editable) {
+        articles.status.textContent = 'Could not check which articles can be edited: ' + (editableLoad.error || 'unknown error.');
+        return;
+      }
+      var id = editable[box.value];
+      if (!id) {
+        articles.status.textContent = '';
+        window.alert('“' + box.getAttribute('data-title') + '” was not written in the article editor, so it can’t be edited here.\n\n' +
+          'Edit its file in GitHub instead: ' + box.value);
+        return;
+      }
+      window.location.href = '/edit/?draft=' + encodeURIComponent(id);
+    });
+  });
+
+  deleteButton.addEventListener('click', function () {
+    var boxes = articles.checked();
+    if (!boxes.length) return;
+    var titles = boxes.map(function (b) { return '• ' + b.getAttribute('data-title'); }).join('\n');
+    if (!window.confirm('Delete ' + plural(boxes.length, 'article') + ' from the site?\n\n' + titles +
+      '\n\nThe posts and their images are removed from GitHub. This cannot be undone here.')) return;
+
+    articles.setBusy(true);
+    articles.status.textContent = 'Deleting…';
+    request(api + '/articles/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paths: boxes.map(function (b) { return b.value; }) })
+    }).then(function (res) {
+      var gone = (res.deleted || []).concat(res.missing || []);
+      boxes.forEach(function (b) { if (gone.indexOf(b.value) !== -1) b.closest('li').remove(); });
+      var msg = plural((res.deleted || []).length, 'article') + ' deleted. The site updates in about 3 minutes, once the deploy finishes.';
+      if (res.missing && res.missing.length) msg += ' ' + plural(res.missing.length, 'article') + ' had already been removed.';
+      if (res.warning) msg += ' ' + res.warning;
+      if (!articles.boxes().length) msg += ' No published articles left.';
+      articles.status.textContent = msg;
+    }).catch(function (err) {
+      articles.status.textContent = err.message;
+    }).then(function () { articles.setBusy(false); });
   });
 
   loadComments();
